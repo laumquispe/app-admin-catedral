@@ -1,7 +1,7 @@
 export class Concepto {
    
     id?: number;  
-    descripcion: string | undefined;
+    descripcion!: string;
     tiporegistro_id: number | undefined;
     activo: boolean | undefined;
     created_by_id: number | undefined;

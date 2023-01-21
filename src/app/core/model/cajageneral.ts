@@ -17,8 +17,7 @@ export class CajaGeneral {
     concepto!: Concepto;
     concepto_id!: number;
     subconcepto!: Subconcepto;
-    subconcepto_id!: number
-    descripcion!: string;
+    subconcepto_id!: number;
     tipocomprobante!: TipoComprobante;
     tipocomprobante_id!: number;
     nrocomprobante!: string;

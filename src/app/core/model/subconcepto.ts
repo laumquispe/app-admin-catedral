@@ -1,10 +1,9 @@
 export class Subconcepto {    
  
-    id?: number;
-    nombre: string | undefined; 
-    descripcion: string | undefined; 
-    concepto_id: number = 0;
-    activo: boolean = true; 
+    id?: number;   
+    descripcion!: string; 
+    concepto_id!: number;
+    activo?: boolean; 
     created_at: string | undefined; 
     updated_at: string | undefined; 
 }

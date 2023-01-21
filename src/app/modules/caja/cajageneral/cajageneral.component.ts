@@ -178,7 +178,7 @@ export class CajageneralComponent implements OnInit {
             new Date(),
             'dd-MM-yyyy HH:mm:ss'
           );
-          this.cajageneralService.updateRegistroCaja(caja).subscribe(
+          this.cajageneralService.updateRegistroCajaCancelar(caja).subscribe(
             response => {
              // this.getTotalCaja();
              this.getRegistrosCaja();

@@ -112,7 +112,7 @@
           <div class="rowcuatro">
               <mat-form-field class="example-full-width">
                   <textarea matInput placeholder="Escribe una descripcion..." name="descripcion"
-                      #descripcion="ngModel" [(ngModel)]="newRegistroCaja.descripcion">
+                      #descripcion="ngModel" [(ngModel)]="newRegistroCaja.observacion">
                   </textarea>
               </mat-form-field>
           </div>
@@ -280,7 +280,7 @@
             <!-- Descripcion Column -->
             <ng-container matColumnDef="descripcion">
                 <mat-header-cell *matHeaderCellDef>Descripcion</mat-header-cell>
-                <mat-cell *matCellDef="let caja"> {{caja.descripcion}}</mat-cell>
+                <mat-cell *matCellDef="let caja"> {{caja.observacion}}</mat-cell>
             </ng-container>
             <!-- Formapago Column -->
             <ng-container matColumnDef="formapago">

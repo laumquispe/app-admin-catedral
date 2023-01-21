@@ -39,6 +39,11 @@ export class CajageneralService {
     return this.http.put(url, registro);
   }
 
+  updateRegistroCajaCancelar(registro: CajaGeneral): Observable<any> {  
+    const url = `${environment.baseUrl}/updateregistrocanceled`;
+    return this.http.put(url, registro);
+  }
+
 
 
 

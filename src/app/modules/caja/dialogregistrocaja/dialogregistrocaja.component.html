@@ -8,12 +8,12 @@
     <p><span class="labelback">Tipo Registro: </span>{{registroCaja?.tiporegistro?.descripcion}}</p>
     <p><span class="labelback">Concepto: </span>{{registroCaja?.concepto?.descripcion}}</p>
     <p><span class="labelback">Subconcepto: </span>{{registroCaja?.subconcepto?.descripcion}}</p>
-    <p><span class="labelback">Descripción: </span>{{registroCaja?.descripcion?registroCaja?.descripcion:'-'}}</p>
+    <p><span class="labelback">Descripción: </span>{{registroCaja?.observacion?registroCaja?.observacion:'-'}}</p>
     <p><span class="labelback">Tipo Comprobante: </span>{{registroCaja?.tipocomprobante?.descripcion}}</p>
     <p><span class="labelback">Nro. Comprobante: </span>{{registroCaja?.nrocomprobante}}</p>
     <p><span class="labelback">Proveedor: </span>{{registroCaja?.proveedor?.descripcion}}</p>
     <p><span class="labelback">Nro. Orden Pago: </span>{{registroCaja?.nroordenpago}}</p>
-    <p><span class="labelback">Forma Pago: </span>{{registroCaja?.formapago?.nombre}}</p>
+    <p><span class="labelback">Forma Pago: </span>{{registroCaja?.formapago?.descripcion}}</p>
     <p><span class="labelback">Importe: </span>{{registroCaja?.importe}}</p>
     <p class="labeluser">{{registroCaja?.createdregistro}}</p>
     <p class="labeluser">{{registroCaja?.updatedregistro}}</p>  
