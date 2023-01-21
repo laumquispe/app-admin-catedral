@@ -1,0 +1,60 @@
+
+  <button *ngIf="!tipoBtn" 
+    placement="right" type="button"
+    [class]="class"
+    ngbTooltip="tooltip"
+    (click)="onlyTextPlain()">
+    <i *ngIf="viewIcon" [class]="icon"></i>{{viewLabel ? label : ''}}
+  </button>
+
+  <ng-container>
+    <button *ngIf="tipoBtn===1"
+    placement="right" type="button"
+    ngbTooltip="tooltip"
+    [class]="class"
+    [disabled]="disabled"
+    (click)="click($event)">
+    <i *ngIf="viewIcon" [class]="icon"></i> {{viewLabel ? label : ''}}
+  </button>
+  </ng-container>
+
+  
+
+  <button *ngIf="tipoBtn===2" 
+    placement="right" type="button"
+    [class]="class"
+    ngbTooltip="tooltip"
+    (click)="click($event)">
+    <i *ngIf="viewIcon" [class]="icon"></i> {{viewLabel ? label : ''}}
+  </button>  
+
+  <ng-container>
+    <button *ngIf="tipoBtn===3"
+    placement="right" 
+    [class]="class"
+    ngbTooltip="tooltip"
+    [disabled]="disabled"
+    (click)="click($event)">
+    <i *ngIf="viewIcon" [class]="icon"></i> {{viewLabel ? label : ''}}
+  </button>
+  </ng-container>
+
+  <ng-container>
+    <button *ngIf="tipoBtn===4"
+    placement="right" type="button"
+    ngbTooltip="tooltip"
+    [class]="class"
+    [disabled]="disabled"
+    (click)="click($event)">
+    <div class="iconmed"><i *ngIf="viewIcon" [class]="icon"></i></div> {{viewLabel ? label : ''}}
+  </button>
+  </ng-container>
+
+<!-- hidden -->
+<div *ngIf="showDynamicComponent" hidden>
+    <app-dynamic-component
+        [html]="htmlForDC"
+        [genericObject]="data"
+        (afterViewInitEE)="generateReport($event)">
+    </app-dynamic-component>
+</div>

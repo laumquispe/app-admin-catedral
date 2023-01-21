@@ -1,0 +1,136 @@
+boxtotal {
+    background: #3A6DBC;
+    font-size: 16px; 
+    color: white;
+  
+  }
+
+.rowDate{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.rowDate .findfield{
+    width: 200px!important; 
+}
+
+.rowDate .rangofechas{
+    width: 250px!important; 
+}
+
+.rowuno, .rowdos, .rowtres, .rowcuatro, .rowcinco{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.rowuno .tiporegistro{
+    width: 250px!important;
+}
+.rowuno .conceptos{
+    width: 250px!important;
+}
+
+.rowuno .subconceptos{
+    width: 250px!important;
+}
+
+.rowuno .medicos{
+    width: 250px!important;
+}
+
+.rowdos .tipocomprobante{
+    width: 250px!important;
+}
+
+.rowdos .nrocomprobante{
+    width: 250px!important;
+}
+
+.rowdos .proveedor{
+    width: 250px!important;
+}
+
+.rowdos .nroordenpago{
+    width: 250px!important;
+}
+
+.rowtres .formapago{
+    width: 250px!important;
+}
+
+.rowtres .importe{
+    width: 250px!important;
+}
+
+.example-full-width {
+    width: 65%;
+  }
+  
+  .rowcinco{   
+    justify-content: flex-end;
+    align-items: center;
+} 
+
+.mat-column-fecha {	
+	flex: 0 0 10% !important;
+	width: 10% !important;	
+}
+
+.mat-column-concepto {	
+	flex: 0 0 25% !important;
+	width: 25% !important;	
+}
+
+.mat-column-subconcepto {	
+	flex: 0 0 25% !important;
+	width: 25% !important;	
+}
+
+.mat-column-formapago {	
+	flex: 0 0 15% !important;
+	width: 15% !important;	
+}
+
+.mat-column-importe {	
+	flex: 0 0 10% !important;
+	width: 10% !important;	
+}
+
+.mat-column-acciones {	
+	flex: 0 0 15% !important;
+	width: 15% !important;	
+}
+
+.cajarow{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.btnexcel{
+    background-color:#28a745;
+    color:white;
+ }
+ 
+ .estadouno{
+    color: #31b51f; 
+    font-weight: 500;
+  }
+  
+  .estadodos{
+    color: #e40d3c;
+    font-weight: 500; 
+  }
+
+  .mat-row:nth-child(even){
+    background-color:rgb(243 245 247);
+    
+  }
+  
+  .mat-row:nth-child(odd){
+    background-color:#fff;
+  }

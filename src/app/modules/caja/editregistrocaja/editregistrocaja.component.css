@@ -1,0 +1,58 @@
+.rowuno, .rowdos, .rowtres, .rowcuatro, .rowcinco{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.rowuno .tiporegistro{
+    width: 250px!important;
+}
+.rowuno .conceptos{
+    width: 250px!important;
+}
+
+.rowuno .subconceptos{
+    width: 250px!important;
+}
+
+.rowuno .medicos{
+    width: 250px!important;
+}
+
+.rowdos .tipocomprobante{
+    width: 250px!important;
+}
+
+.rowdos .nrocomprobante{
+    width: 250px!important;
+}
+
+.rowdos .proveedor{
+    width: 250px!important;
+}
+
+.rowdos .nroordenpago{
+    width: 250px!important;
+}
+
+.rowtres .formapago{
+    width: 250px!important;
+}
+
+.rowtres .importe{
+    width: 250px!important;
+}
+
+.example-full-width {
+    width: 65%;
+  }
+  
+.rowcinco{   
+  justify-content: flex-end;
+  align-items: center;
+} 
+
+.labeluser{
+    color: #3A6DBC;   
+    font-weight: 450;
+ }

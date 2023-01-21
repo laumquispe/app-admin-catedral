@@ -1,0 +1,79 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* You can add global styles to this file, and also import other style files */
+
+
+
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+    z-index:9999 !important;
+ }
+ /* ::ng-deep .cdk-overlay-container mat-datepicker-content{
+  z-index:99999 !important;
+} */
+
+ /*MODAL*/
+
+ .modal-header{
+    background-color: #3A6DBC;
+    color: #ffffff;
+    height: 80px;
+}
+.close{
+    color: #ffffff;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+    border-bottom-right-radius: .3rem;
+    border-bottom-left-radius: .3rem;
+}
+
+/* h3 {
+    color: #3A6DBC;
+    font-weight: 450!important;
+  } */
+
+  h2 {
+    font-weight: 450!important;
+  }
+
+  .titulo{
+    margin-top: 25px;
+    text-align: start;
+  }
+
+  /* .mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: #fff!important;
+   } */
+
+   .invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #ff4081!important;
+}
+
+.subtitle {
+  color: #3A6DBC;
+  font-size: 15px!important;
+  font-weight: 450;
+  margin-top: 10px;
+ }
+
+ .highlightable{
+  background-color: yellow;
+ }
+
+ /* .swal2-shown .cdk-overlay-container {
+  z-index: 999 !important;
+} */
+
+

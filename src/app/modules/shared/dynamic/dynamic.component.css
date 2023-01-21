@@ -1,0 +1,29 @@
+html,
+body { 
+  margin: 0;
+  padding: 0%;
+}
+/* body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+button {
+  margin: 0;
+  font-family: "exo_2regular", "Helvetica Neue", sans-serif;
+} */
+/* gotham family */
+/* .mat-table {
+  font-family: "exo_2regular";
+} */
+/* 
+@font-face {
+  font-family: "exo_2regular";
+  src: url("../../../assets/fonts/exo2-regular-webfont.woff2") format("woff2"),
+    url("../../../assets/fonts/exo2-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+} */

@@ -1,0 +1,15 @@
+.modal-header{
+    background-color: #3A6DBC;
+    color: #ffffff;
+    height: 50px!important;
+}
+
+.labelback{
+   font-weight: 500;
+}
+
+.labeluser{
+   color: #3A6DBC;
+   font-size: 12px;
+   font-weight: 450;
+}

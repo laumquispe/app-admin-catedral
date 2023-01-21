@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h3 class="modal-title">Registro Caja: {{registroCaja?.created_at}}</h3>
+    <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p><span class="labelback">Tipo Registro: </span>{{registroCaja?.tiporegistro?.descripcion}}</p>
+    <p><span class="labelback">Concepto: </span>{{registroCaja?.concepto?.descripcion}}</p>
+    <p><span class="labelback">Subconcepto: </span>{{registroCaja?.subconcepto?.descripcion}}</p>
+    <p><span class="labelback">Descripción: </span>{{registroCaja?.descripcion?registroCaja?.descripcion:'-'}}</p>
+    <p><span class="labelback">Tipo Comprobante: </span>{{registroCaja?.tipocomprobante?.descripcion}}</p>
+    <p><span class="labelback">Nro. Comprobante: </span>{{registroCaja?.nrocomprobante}}</p>
+    <p><span class="labelback">Proveedor: </span>{{registroCaja?.proveedor?.descripcion}}</p>
+    <p><span class="labelback">Nro. Orden Pago: </span>{{registroCaja?.nroordenpago}}</p>
+    <p><span class="labelback">Forma Pago: </span>{{registroCaja?.formapago?.nombre}}</p>
+    <p><span class="labelback">Importe: </span>{{registroCaja?.importe}}</p>
+    <p class="labeluser">{{registroCaja?.createdregistro}}</p>
+    <p class="labeluser">{{registroCaja?.updatedregistro}}</p>  
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="decline()">Cerrar</button>
+  </div>

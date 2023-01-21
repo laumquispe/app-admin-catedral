@@ -1,0 +1,38 @@
+<div class="login">
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
+    <!-- <div style="text-align: center;">
+      <img src="assets/images/logocol.png"/>
+      <div *ngIf="false">
+        <h1 style="color: #3A6DBC;font-weight: 500;">TESTING</h1>
+      </div>
+    </div> -->
+    <div>
+      <mat-form-field class="full-width-input" appearance="fill">
+        <mat-icon matPrefix>account_circle</mat-icon>
+        <input matInput placeholder="   Usuario" formControlName="login" required>
+        <mat-error>
+          ** Por favor ingrese un usuario válido. **
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="example-container">
+      <mat-form-field class="full-width-input" appearance="fill">
+        <input matInput [type]="hide ? 'password' : 'text'" placeholder="   Password" formControlName="password"
+          required>
+        <mat-error>
+          ** Por favor ingrese una contraseña válida. **
+        </mat-error>
+        <mat-icon matPrefix>vpn_key</mat-icon>
+        <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button color="primary">
+        <mat-icon>login</mat-icon> Ingresar
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,102 @@
+<form name="form" (ngSubmit)="f.form.valid && editRegistroCaja()" #f="ngForm" novalidate>
+    <div class="modal-header">
+        <h3 class="modal-title">Editar Registro Caja: {{registroSelect.created_at}}</h3>
+        <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="rowuno">
+            <div class="form-group tiporegistro">
+                <mat-form-field>
+                    <input matInput type="text" id="tiporegistro" placeholder="Tipo Registro"
+                        [value]="registroSelect.tiporegistro?.descripcion" [readonly]="true">
+                </mat-form-field>
+            </div>
+            <div class="form-group conceptos">
+                <mat-form-field>
+                    <input matInput type="text" id="concepto" placeholder="Concepto"
+                        [value]="registroSelect.concepto?.descripcion" [readonly]="true">
+                </mat-form-field>
+            </div>
+            <div class="form-group subconceptos">
+                <mat-form-field>
+                    <input matInput type="text" id="subconcepto" placeholder="Subconcepto"
+                        [value]="registroSelect.subconcepto?.descripcion" [readonly]="true">
+                </mat-form-field>
+            </div>           
+        </div>
+        <div class="rowdos">
+            <div class="form-group tipocomprobante">
+                <mat-form-field>
+                    <mat-label for="tipocomprobante_id">Tipo Comprobante</mat-label>
+                    <mat-select name="tipocomprobante_id" [(ngModel)]="registroSelect.tipocomprobante_id">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let tc of tipoComprobantes;" [value]="tc.id">
+                            {{tc.descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group nrocomprobante">
+                <mat-form-field>
+                    <input matInput type="text" [(ngModel)]="registroSelect.nrocomprobante"
+                        placeholder="Nro. Comprobante" name="nrocomprobante" #nrocomprobante="ngModel" />
+                </mat-form-field>
+            </div>
+            <div class="form-group proveedor">
+                <mat-form-field>
+                    <mat-label for="proveedor_id">Proveedor</mat-label>
+                    <mat-select name="proveedor_id" [(ngModel)]="registroSelect.proveedor_id">
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let proveedor of Proveedores;" [value]="proveedor.id">
+                            {{proveedor.descripcion}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group nroordenpago">
+                <mat-form-field>
+                    <input matInput type="text" [(ngModel)]="registroSelect.nroordenpago" placeholder="Nro. Orden Pago"
+                        name="nroordenpago" #nroordenpago="ngModel" />
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="rowtres">
+            <div class="form-group formapago">
+                <mat-form-field>
+                    <mat-label for="formapago_id">Forma Pago</mat-label>
+                    <mat-select name="formapago_id" [(ngModel)]="registroSelect.formapago_id" required>
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let fp of formaPagos;" [value]="fp.id">
+                            {{fp.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group importe">
+                <mat-form-field>
+                    <input matInput type="text" [(ngModel)]="registroSelect.importe" placeholder="Importe"
+                        name="importe" #importe="ngModel" required />
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="rowcuatro">
+            <mat-form-field class="example-full-width">
+                <textarea matInput placeholder="Escribe una descripcion..." name="descripcion" #descripcion="ngModel"
+                    [(ngModel)]="registroSelect.descripcion">
+                </textarea>
+            </mat-form-field>
+        </div>
+        <p class="labeluser">{{registroCaja?.createdregistro}}</p>
+        <p class="labeluser">{{registroCaja?.updatedregistro}}</p> 
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="#6c757d" type="button" (click)="dismiss()">
+            <mat-icon>close</mat-icon> Cerrar
+        </button>
+        <button mat-raised-button color="primary" type="submit">
+            <mat-icon>save</mat-icon> Guardar
+        </button>
+    </div>
+</form>

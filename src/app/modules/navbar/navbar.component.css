@@ -1,0 +1,53 @@
+.color {
+  background-color: #3A6DBC;
+}
+
+.example-icon {
+  padding: 0 14px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-menu .mat-menu-panel {
+  background: #3A6DBC!important;
+}
+
+.mat-menu-item:hover {
+  /* background: #3A6DBC;
+  color:#fff; */
+  background: #3A6DBC;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* .mat.mat-menu-item-submenu-trigger:hover{
+  background: #3A6DBC;
+  font-weight: bold;
+  color: #fff;
+} */
+
+/* a:hover{
+  background: #3A6DBC;
+  font-weight: bold;
+  color: #fff;
+} */
+
+
+.mat-menu-item .mat-icon-no-color, .mat-menu-item-submenu-trigger::after{
+  /* color: #fff; */
+  background: #3A6DBC;
+  color:#fff;
+
+}
+/* , .mat-menu-item-submenu-trigger */
+.pedidoestudio {
+  animation: color-change 1s infinite;
+}
+
+@keyframes color-change {
+  0% { color: #e83e8c ; }  /*  #e5384e */
+  50% { color: #fff; }
+  100% { color: #e83e8c; }
+}
