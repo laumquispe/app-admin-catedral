@@ -1,4 +1,4 @@
-boxtotal {
+.boxtotal {
     background: #3A6DBC;
     font-size: 16px; 
     color: white;
@@ -73,6 +73,12 @@ boxtotal {
     align-items: center;
 } 
 
+.mat-column-numregistro {	
+	flex: 0 0 5% !important;
+	width: 5% !important;	
+}
+
+
 .mat-column-fecha {	
 	flex: 0 0 10% !important;
 	width: 10% !important;	
@@ -99,8 +105,8 @@ boxtotal {
 }
 
 .mat-column-acciones {	
-	flex: 0 0 15% !important;
-	width: 15% !important;	
+	flex: 0 0 10% !important;
+	width: 10% !important;	
 }
 
 .cajarow{

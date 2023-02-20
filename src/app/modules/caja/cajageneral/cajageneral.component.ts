@@ -22,10 +22,12 @@ import { EditregistrocajaService } from '../editregistrocaja/editregistrocaja.se
 import Swal from 'sweetalert2';
 import { TipoRegistro } from '@core/model/tiporegistro';
 import { MatTableDataSource } from '@angular/material/table';
+import { NumberFormatPipe } from '@core/library/number.pipe';
 @Component({
   selector: 'app-cajageneral',
   templateUrl: './cajageneral.component.html',
-  styleUrls: ['./cajageneral.component.css']
+  styleUrls: ['./cajageneral.component.css'],
+  providers: [NumberFormatPipe]
 })
 export class CajageneralComponent implements OnInit {
   newRegistroCaja: CajaGeneral = new CajaGeneral();
@@ -67,8 +69,8 @@ export class CajageneralComponent implements OnInit {
   btnExcel = true;
   showMyClass = false;
   dataSource: any;
-  displayedColumnsCaja: string[] = ['fecha', 'concepto', 'subconcepto', 'formapago', 'importe', 'acciones'];
-  displayedColumns: string[] = ['fecha','tiporegistro', 'concepto', 'subconcepto', 'descripcion', 'formapago', 'importe'];
+  displayedColumnsCaja: string[] = ['numregistro','fecha', 'concepto', 'subconcepto', 'formapago', 'importe', 'acciones'];
+  displayedColumns: string[] = ['numregistro','fecha','tiporegistro', 'concepto', 'subconcepto', 'descripcion', 'formapago', 'ingreso','egreso'];
 
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -82,7 +84,8 @@ export class CajageneralComponent implements OnInit {
     private formapagoService: FormapagoService,
     private proveedorService: ProveedorService,
     private dialogRegistroCaja: DialogregistrocajaService,
-    private editarRegistroService: EditregistrocajaService
+    private editarRegistroService: EditregistrocajaService,
+    private formatPipe: NumberFormatPipe,
   ) { }
 
   ngOnInit() {
@@ -154,7 +157,13 @@ export class CajageneralComponent implements OnInit {
         this.viewFormulario = false;
         this.newRegistroCaja = new CajaGeneral();
        // this.getRegistrosCaja();
-        setTimeout(() => { this.ngxService.stop(); });
+        setTimeout(() => { 
+          Swal.fire(
+            'Registro guardado con éxito!',
+            '',
+            'success'                
+          )
+          this.ngxService.stop(); });
       },
       error => { console.log(error); this.ngxService.stop(); });
 
@@ -273,5 +282,10 @@ export class CajageneralComponent implements OnInit {
     }
     return "";
   }
+
+  formatNumber(importe:any) {
+    return this.formatPipe.transform(importe);
+  }
+
 
 }

@@ -205,6 +205,11 @@
             </mat-card-content>
         </mat-card>
         <mat-table [dataSource]="dataSource">
+            <!-- Id Column -->
+            <ng-container matColumnDef="numregistro">
+                <mat-header-cell *matHeaderCellDef>Nº</mat-header-cell>
+                <mat-cell *matCellDef="let caja"> {{caja.id}}</mat-cell>
+            </ng-container>
             <!-- fecha Column -->
             <ng-container matColumnDef="fecha">
                 <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
@@ -257,6 +262,11 @@
     </div>
     <div style="display: none;">
         <mat-table  matTableExporter [dataSource]="dataSource" #exporter="matTableExporter">
+            <!-- numero registro Column -->
+            <ng-container matColumnDef="numregistro">
+                <mat-header-cell *matHeaderCellDef>Nº</mat-header-cell>
+                <mat-cell *matCellDef="let caja"> {{caja.id}}</mat-cell>
+            </ng-container>
             <!-- fecha Column -->
             <ng-container matColumnDef="fecha">
                 <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
@@ -287,11 +297,16 @@
                 <mat-header-cell *matHeaderCellDef>Forma Pago</mat-header-cell>
                 <mat-cell *matCellDef="let caja"> {{caja.formapago?.descripcion}}</mat-cell>
             </ng-container>
-            <!-- Importe Column -->
-            <ng-container matColumnDef="importe">
-                <mat-header-cell *matHeaderCellDef>Importe</mat-header-cell>
-                <mat-cell *matCellDef="let caja"> {{caja.importe}}</mat-cell>
-            </ng-container>           
+            <!-- Ingreso Column -->
+            <ng-container matColumnDef="ingreso">
+                <mat-header-cell *matHeaderCellDef>Ingreso</mat-header-cell>
+                <mat-cell *matCellDef="let caja"> {{caja.tiporegistro_id == 1?formatNumber(caja.importe):''}}</mat-cell>
+            </ng-container>
+            <!-- Egreso Column -->
+            <ng-container matColumnDef="egreso">
+                <mat-header-cell *matHeaderCellDef>Egreso</mat-header-cell>
+                <mat-cell *matCellDef="let caja"> {{caja.tiporegistro_id == 2?formatNumber(caja.importe):''}}</mat-cell>
+            </ng-container>             
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table> 

@@ -15,21 +15,21 @@
          return this.localeString(value);
      }
  
-     missingOneDecimalCheck(nStr) {
+     missingOneDecimalCheck(nStr: any) {
          nStr += '';
          const x = nStr.split(',')[1];
          if (x && x.length === 1) return true;   
          return false;
      }
  
-     missingAllDecimalsCheck(nStr) {
+     missingAllDecimalsCheck(nStr: any) {
          nStr += '';
          const x = nStr.split(',')[1];
          if (!x) return true;    
          return false;
      }
  
-     localeString(nStr) {
+     localeString(nStr: any) {
          if (nStr === '') return ''; 
          let x, x1, x2, rgx, y1, y2;
          nStr += '';
