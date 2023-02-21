@@ -35,6 +35,7 @@ export class CajaGeneral {
     createdregistro?: string;
     updatedregistro?: string;
     canceled_at?: string | null;
-    canceled_by_id?:number;  
+    canceled_by_id?:number; 
+    saldo! :number;   
   }
   

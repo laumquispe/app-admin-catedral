@@ -23,6 +23,9 @@ import Swal from 'sweetalert2';
 import { TipoRegistro } from '@core/model/tiporegistro';
 import { MatTableDataSource } from '@angular/material/table';
 import { NumberFormatPipe } from '@core/library/number.pipe';
+import { Report } from '@core/model/report';
+import { ButtonPrintComponent } from '@module/shared/button-print/button-print.component';
+import { ReporteService } from '@core/service/reporte.service';
 @Component({
   selector: 'app-cajageneral',
   templateUrl: './cajageneral.component.html',
@@ -53,7 +56,7 @@ export class CajageneralComponent implements OnInit {
   totalFindIngreso: number = 0;
   totalFindEgreso: number = 0;
   totalFindNeto: number = 0;
-
+  saldo: number = 0;
   findConcepto_id:number = 0;
   findSubconcepto_id:number = 0;
   findFormapago_id:number = 0;
@@ -65,13 +68,14 @@ export class CajageneralComponent implements OnInit {
     { id: 1, name: 'INGRESO' },
     { id: 2, name: 'EGRESO' }
   ];
-
+  registroGeneral: any = null;
   btnExcel = true;
   showMyClass = false;
   dataSource: any;
   displayedColumnsCaja: string[] = ['numregistro','fecha', 'concepto', 'subconcepto', 'formapago', 'importe', 'acciones'];
   displayedColumns: string[] = ['numregistro','fecha','tiporegistro', 'concepto', 'subconcepto', 'descripcion', 'formapago', 'ingreso','egreso'];
-
+  @ViewChild('buttoncaja', { static: false }) buttoncaja!: ButtonPrintComponent;
+  template: Report = new Report(); model:any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
   constructor(
@@ -86,6 +90,7 @@ export class CajageneralComponent implements OnInit {
     private dialogRegistroCaja: DialogregistrocajaService,
     private editarRegistroService: EditregistrocajaService,
     private formatPipe: NumberFormatPipe,
+    private reporteService: ReporteService
   ) { }
 
   ngOnInit() {
@@ -97,10 +102,24 @@ export class CajageneralComponent implements OnInit {
       this.proveedorService.getProveedores().subscribe(proveedores => { this.proveedores = proveedores; });
       this.formapagoService.getFormaPagos().subscribe(formapagos => { this.formaPagos = formapagos; });
       this.tipocomprobanteService.getTipoComprobantes().subscribe(tipocomprobantes => { this.tipoComprobantes = tipocomprobantes; });
-     // this.getTotalCaja();
+      this.getUltCaja();
       setTimeout(() => {
+       this.getTotalRegistro();
         this.ngxService.stop();
-      });
+      },2000);
+    });
+  }
+
+  getUltCaja(){
+    this.cajageneralService.getLastRegistrosCaja().subscribe(response=>{
+      this.saldo = response.saldo; //nunca basarse en este dato.      
+    });
+  }
+
+  getTotalRegistro(){
+    this.cajageneralService.getSumRegistros().subscribe(response=>{
+      this.registroGeneral = response[0];  
+         
     });
   }
 
@@ -152,11 +171,12 @@ export class CajageneralComponent implements OnInit {
     this.newRegistroCaja.created_by_id = this.tokenService.currentUserData.id;
     this.newRegistroCaja.created_at = this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss');
     this.newRegistroCaja.fecha = this.newRegistroCaja.fecha?this.newRegistroCaja.fecha:this.pipe.transform(new Date(), 'yyyy-MM-dd');  
+    this.newRegistroCaja.saldo = this.newRegistroCaja.tiporegistro_id == TipoRegistro.INGRESO?Number(this.newRegistroCaja.importe)+Number(this.saldo):Number(this.saldo)-Number(this.newRegistroCaja.importe);
     this.cajageneralService.createCajaGeneral(this.newRegistroCaja).subscribe(
       registroscaja => {
         this.viewFormulario = false;
         this.newRegistroCaja = new CajaGeneral();
-       // this.getRegistrosCaja();
+        this.getUltCaja();
         setTimeout(() => { 
           Swal.fire(
             'Registro guardado con éxito!',
@@ -285,6 +305,37 @@ export class CajageneralComponent implements OnInit {
 
   formatNumber(importe:any) {
     return this.formatPipe.transform(importe);
+  }
+
+  cargarTemplate(templateid:any) {   
+    this.reporteService.get(templateid).subscribe(response => {
+      this.template = response;
+      const usuario = this.tokenService.currentUserData.apellido + ', ' + this.tokenService.currentUserData.nombre;
+      this.model = {
+        fechaHoy: this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss'),
+        fechadesde: this.fechaDesde,
+        fechahasta: this.fechaHasta,
+        usuario: usuario,
+        registros: this.registrosCaja,
+        ingreso: this.formatNumber(this.totalFindIngreso),
+        egreso: this.formatNumber(this.totalFindEgreso),
+        neto: this.formatNumber(this.registroGeneral.neto),        
+      };
+      this.buttoncaja.template = response;
+      this.buttoncaja.generateHtml();
+    });
+  }
+
+  printCaja($event: string) {
+    const win = window.open();
+    self.focus();
+    win!.document.open();
+    win!.document.write($event);
+    win!.document.close();
+    setTimeout(() => {
+      win!.print();
+      win!.close();
+    }, 500);
   }
 
 

@@ -44,8 +44,16 @@ export class CajageneralService {
     return this.http.put(url, registro);
   }
 
+  getLastRegistrosCaja(): Observable<CajaGeneral> {
+    const url = `${environment.baseUrl}/lastregistro`;
+    return this.http.get<CajaGeneral>(url);
+  }
 
-
+  getSumRegistros(): Observable<any[]> {
+    const url = `${environment.baseUrl}/sumregistros`;
+    return this.http.get<any[]>(url);
+  }
+  
 
 
 }
