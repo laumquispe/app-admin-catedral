@@ -177,10 +177,11 @@ export class CajageneralComponent implements OnInit {
         this.viewFormulario = false;
         this.newRegistroCaja = new CajaGeneral();
         this.getUltCaja();
+        this.getTotalRegistro();
         setTimeout(() => { 
           Swal.fire(
             'Registro guardado con éxito!',
-            '',
+            'Nº de Registro:'+registroscaja.id,
             'success'                
           )
           this.ngxService.stop(); });
