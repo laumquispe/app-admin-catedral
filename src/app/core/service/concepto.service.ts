@@ -22,6 +22,15 @@ export class ConceptoService {
     return this.http.get<Concepto[]>(url);
   }
 
+  addConcepto(concepto: Concepto): Observable<any> {
+    return this.http.post<Concepto>(this.API_URL, concepto);
+  }
+
+  updateConcepto(concepto: Concepto): Observable<any> {
+    const url = `${this.API_URL}/${concepto.id}`;
+    return this.http.put(url, concepto);
+  }
+
   
 
 }

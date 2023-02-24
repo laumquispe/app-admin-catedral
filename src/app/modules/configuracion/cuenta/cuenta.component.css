@@ -1,0 +1,27 @@
+.mat-column-descripcion {	
+	flex: 0 0 90% !important;
+	width: 90% !important;	
+}
+
+
+.mat-column-acciones {	
+	flex: 0 0 10% !important;
+	width: 10% !important;	
+}
+
+.btnppos {
+    min-width: 30px!important;
+    line-height: 15px!important;
+    padding: 0 5px!important;
+}
+
+
+.rowuno{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.rowuno .tiporegistro{
+    width: 300px!important; 
+}

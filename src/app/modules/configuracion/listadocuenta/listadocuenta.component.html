@@ -1,0 +1,50 @@
+<div>
+  <div class="container titulo">
+    <h2 style="color:#3a6dbc">Configuración de Cuentas</h2>
+  </div>
+    <div class="container mt-3">    
+      <div>
+        <div style="float: right;">
+          <button mat-raised-button color="primary" (click)="editarCuenta(null,true)">
+             + Nueva Cuenta
+          </button>
+       </div>
+        <!-- Input Agregado para permitir la Busqueda -->
+        <mat-form-field>
+          <input matInput (keyup)="filtrarDatos($event)" [(ngModel)]="valor" placeholder="Buscar Cuenta..." />
+        </mat-form-field>
+        <!-- <button mat-icon-button ngbTooltip="Buscar Cuenta" (click)="buscarDato()">
+          <mat-icon>search</mat-icon>
+        </button> -->
+        <mat-table #tablacuenta [dataSource]="lstCuentas" class="mat-elevation-z8">
+          <ng-container matColumnDef="numero">
+            <mat-header-cell *matHeaderCellDef>Nº</mat-header-cell>
+            <mat-cell *matCellDef="let cuenta">
+              <span class="mobile-label"></span>{{cuenta.id}}
+            </mat-cell>
+          </ng-container><!-- id -->
+          <ng-container matColumnDef="cuenta">
+            <mat-header-cell *matHeaderCellDef>Cuenta</mat-header-cell>
+            <mat-cell *matCellDef="let cuenta">
+              <span class="mobile-label"></span>{{cuenta.descripcion}}
+            </mat-cell>
+          </ng-container><!-- Cuenta -->
+          <ng-container matColumnDef="acciones" style="justify-content: center;">
+            <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+            <mat-cell *matCellDef="let cuenta">
+              <button mat-icon-button ngbTooltip="Editar" (click)="editarCuenta(cuenta,false)">
+                <mat-icon>mode_edit</mat-icon>
+              </button>
+              <button mat-icon-button ngbTooltip="Estado" (click)="estadoCuenta(cuenta)">
+                <i *ngIf="cuenta.activo" class="fa fa-check fa-lg"></i>
+                <i *ngIf="!cuenta.activo" class="fa fa-close fa-lg"></i>
+            </button>
+            </mat-cell>
+          </ng-container><!-- Acciones Column -->
+          <mat-header-row *matHeaderRowDef="dspColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: dspColumns;let i = index;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageIndex]="0" [pageSize]="25" [pageSizeOptions]="[25, 50, 75, 100]"></mat-paginator>
+      </div>
+    </div>
+  </div>

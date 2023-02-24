@@ -1,0 +1,14 @@
+.mat-column-numero {	
+	flex: 0 0 10% !important;
+	width: 10% !important;	
+}
+
+.mat-column-cuenta {	
+	flex: 0 0 80% !important;
+	width: 80% !important;	
+}
+
+.mat-column-acciones {	
+	flex: 0 0 10% !important;
+	width: 10% !important;	
+}

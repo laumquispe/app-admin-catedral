@@ -31,7 +31,7 @@
                   </mat-form-field>
               </div>
               <div class="form-group conceptos">
-                  <mat-form-field>
+                  <mat-form-field style="width: 250px;">
                       <mat-label for="concepto_id">Concepto</mat-label>
                       <mat-select name="concepto_id" [(ngModel)]="newRegistroCaja.concepto_id"
                           (ngModelChange)="changeConceptos($event)" required>
@@ -43,7 +43,7 @@
                   </mat-form-field>
               </div>
               <div class="form-group subconceptos">
-                  <mat-form-field>
+                  <mat-form-field style="width: 250px;">
                       <mat-label for="subconcepto_id">Subconcepto</mat-label>
                       <mat-select name="subconcepto_id" [(ngModel)]="newRegistroCaja.subconcepto_id" required>
                           <mat-option></mat-option>

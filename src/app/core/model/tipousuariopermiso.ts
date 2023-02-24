@@ -13,7 +13,7 @@ export class TipoUsuarioPermiso {
   permisoicono:string | undefined;
   permisoid: number | undefined;
 
-  subpermisos!: TipousuarioSubpermiso[];
+  subpermisos: TipousuarioSubpermiso[] = [];
 
   constructor(data?: any) {
     Object.assign(this, data);

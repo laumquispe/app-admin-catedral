@@ -1,0 +1,101 @@
+<form name="form" (ngSubmit)="f.form.valid && guardarCuenta()" #f="ngForm" novalidate>
+    <div class="modal-header">
+        <h3 class="modal-title">{{cuentaSelect!.id?'Editar Cuenta':'Nueva Cuenta'}}</h3>
+        <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="rowuno">
+            <div class="form-group tiporegistro">
+                <mat-form-field style="width: 250px;">
+                    <input matInput type="text" [(ngModel)]="cuentaSelect!.descripcion" placeholder="Concepto"
+                        name="concepto" #concepto="ngModel" required/>
+                </mat-form-field>
+            </div>
+            <div class="form-group tiporegistro">
+                <mat-form-field>
+                    <mat-label for="tiporegistro_id">Tipo Registro</mat-label>
+                    <mat-select name="tiporegistro_id"  #tiporegistro_id="ngModel" [(ngModel)]="cuentaSelect!.tiporegistro_id"
+                        required>
+                        <mat-option *ngFor="let tregistro of tipoRegistros;" [value]="tregistro.id">
+                            {{tregistro.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>                  
+        </div>  
+        <div>
+            <strong style="color:#3A6DBC">Subconceptos</strong>
+        </div>
+        <mat-card class="mat-elevation-z3">
+            <mat-card-content>
+                <mat-table #tablesubconceptos [dataSource]="lstSubconcepto">
+                    <!-- Descripcion Column-->
+                    <ng-container matColumnDef="descripcion">
+                        <mat-header-cell *matHeaderCellDef>Subconcepto</mat-header-cell>
+                        <mat-cell *matCellDef="let subconcepto">
+                            <input type="text" matInput name="Subconcepto"
+                                placeholder="Nombre" [value]="subconcepto.descripcion"  readonly="true"/>
+                        </mat-cell>
+                    </ng-container>             
+                    <!--Acciones-->
+                    <ng-container matColumnDef="acciones">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let subconcepto">
+                            <button mat-raised-button *ngIf="subconcepto.activo" class="btnppos" (click)="activar(subconcepto)"
+                                ngbTooltip="Activado" color="primary" type="button">
+                                <mat-icon>done</mat-icon>
+                            </button>
+                            <button mat-raised-button *ngIf="!subconcepto.activo" class="btnppos" (click)="activar(subconcepto)"
+                            ngbTooltip="Desactivado" color="primary" type="button">
+                            <mat-icon>highlight_off</mat-icon>
+                        </button>
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+                <mat-table #tablenuevos [dataSource]="lstNewSubconcepto">
+                    <!-- Descripcion Column-->
+                    <ng-container matColumnDef="descripcion">
+                        <mat-cell *matCellDef="let element">
+                            {{element.descripcion}}
+                        </mat-cell>                        
+                        <mat-footer-cell *matFooterCellDef>
+                            <input type="text" matInput [(ngModel)]="newSubconcepto.descripcion" name="descripcion"
+                            placeholder="Descripcion" (focusout)="agregarFila()"
+                            [ngClass]="{ 'is-invalid': f.submitted }" />
+                        </mat-footer-cell>
+                    </ng-container>                     
+                    <!--Acciones: Anular y Agregar-->
+                    <ng-container matColumnDef="acciones">
+                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <button mat-raised-button class="btnppos" (click)="eliminarNuevos(element)"
+                                ngbTooltip="Eliminar" color="primary">
+                                <mat-icon>delete_forever</mat-icon>
+                            </button>
+                        </mat-cell>
+                        <mat-footer-cell *matFooterCellDef class="text-right">
+                            <button mat-raised-button class="btnppos" ngbTooltip="Agregar"
+                                (click)="agregarNuevo()" color="primary" type="button">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </mat-footer-cell>
+                    </ng-container>
+                    <mat-row *matRowDef="let row; columns: displayedColumnsNew;"></mat-row>
+                    <mat-footer-row *matFooterRowDef="displayedColumnsNew"></mat-footer-row>
+                </mat-table>              
+            </mat-card-content>
+        </mat-card>   
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="#6c757d" type="button" (click)="dismiss()">
+            <mat-icon>close</mat-icon> Cerrar
+        </button>
+        <button mat-raised-button color="primary" type="submit">
+            <mat-icon>save</mat-icon> Guardar
+        </button>
+    </div>
+</form>
