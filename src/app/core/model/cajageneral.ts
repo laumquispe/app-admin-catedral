@@ -12,7 +12,7 @@ export class CajaGeneral {
     id?: number;
     fecha?: string | null;
     tiporegistro?: TipoRegistro;
-    tiporegistro_id?: number;
+    tiporegistro_id!: number;
     proveedor_id?: number ;
     concepto!: Concepto;
     concepto_id!: number;
