@@ -53,7 +53,18 @@ export class CajageneralService {
     const url = `${environment.baseUrl}/sumregistros`;
     return this.http.get<any[]>(url);
   }
+
+  getRegistrosCajaByMes(fechahasta?: string | null): Observable<any> {  
+    let params = new HttpParams();
+    params = params.set('fechahasta', fechahasta?fechahasta:'');     
+    const url = `${environment.baseUrl}/getregistroscajabyrangomes`;
+    return this.http.get<any>(url, {params});
+  }
   
+  updateRegistrosCajaByMes(registroids: any, usuario_id:number): Observable<any> {   
+    const url = `${environment.baseUrl}/updateregistroscajabymes`;
+    return this.http.put<CajaGeneral>(url, { registroids: registroids, usuario_id:usuario_id});  
+  }
 
 
 }

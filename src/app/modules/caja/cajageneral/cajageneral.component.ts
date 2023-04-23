@@ -26,6 +26,9 @@ import { NumberFormatPipe } from '@core/library/number.pipe';
 import { Report } from '@core/model/report';
 import { ButtonPrintComponent } from '@module/shared/button-print/button-print.component';
 import { ReporteService } from '@core/service/reporte.service';
+import * as _moment from 'moment';
+import { CajaMensual } from '@core/model/cajamensual';
+import { CajamensualService } from '@core/service/cajamensual.service';
 @Component({
   selector: 'app-cajageneral',
   templateUrl: './cajageneral.component.html',
@@ -33,6 +36,8 @@ import { ReporteService } from '@core/service/reporte.service';
   providers: [NumberFormatPipe]
 })
 export class CajageneralComponent implements OnInit {
+  anio?: string | null;
+  mes?: string | null;
   newRegistroCaja: CajaGeneral = new CajaGeneral();
   registrosCaja: CajaGeneral[] = [];
   conceptos: Concepto[] = [];
@@ -43,6 +48,9 @@ export class CajageneralComponent implements OnInit {
   viewFormulario = false;
   textbtn = 'Registrar Caja';
   icono = 'fa fa-plus fa-lg';
+
+  textbtnc = 'Ver Total General';
+  iconoc = 'visibility';
 
   today?: Date ;
   fechaDesde?: string | null;
@@ -72,12 +80,16 @@ export class CajageneralComponent implements OnInit {
   btnExcel = true;
   showMyClass = false;
   dataSource: any;
+  tienecaja = false;
+  btnVerTotal = false;
   displayedColumnsCaja: string[] = ['numregistro','fecha', 'concepto', 'subconcepto', 'formapago', 'importe', 'acciones'];
   displayedColumns: string[] = ['numregistro','fecha','tiporegistro', 'concepto', 'subconcepto', 'descripcion', 'formapago', 'ingreso','egreso'];
   @ViewChild('buttoncaja', { static: false }) buttoncaja!: ButtonPrintComponent;
   template: Report = new Report(); model:any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
+
+  cajaMensualSelect: CajaMensual = new CajaMensual();
   constructor(
     private tokenService: AngularTokenService,
     private ngxService: NgxUiLoaderService,
@@ -90,37 +102,48 @@ export class CajageneralComponent implements OnInit {
     private dialogRegistroCaja: DialogregistrocajaService,
     private editarRegistroService: EditregistrocajaService,
     private formatPipe: NumberFormatPipe,
-    private reporteService: ReporteService
+    private reporteService: ReporteService,
+    private cajamensualService: CajamensualService
   ) { }
 
   ngOnInit() {
     this.ngxService.start();
-    this.today = new Date();
+    this.today = new Date();  
     this.fechaDesde = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.fechaHasta = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.tokenService.validateToken().subscribe(response => {
       this.proveedorService.getProveedores().subscribe(proveedores => { this.proveedores = proveedores; });
       this.formapagoService.getFormaPagos().subscribe(formapagos => { this.formaPagos = formapagos; });
       this.tipocomprobanteService.getTipoComprobantes().subscribe(tipocomprobantes => { this.tipoComprobantes = tipocomprobantes; });
-      this.getUltCaja();
+     // this.getUltCaja();
       setTimeout(() => {
-       this.getTotalRegistro();
+       //this.getTotalRegistro();
         this.ngxService.stop();
       },2000);
     });
   }
 
-  getUltCaja(){
-    this.cajageneralService.getLastRegistrosCaja().subscribe(response=>{
-      this.saldo = response.saldo; //nunca basarse en este dato.      
-    });
-  }
+  // getUltCaja(){
+  //   this.cajageneralService.getLastRegistrosCaja().subscribe(response=>{
+  //     this.saldo = response.saldo; //nunca basarse en este dato.      
+  //   });
+  // }
+  
 
   getTotalRegistro(){
-    this.cajageneralService.getSumRegistros().subscribe(response=>{
-      this.registroGeneral = response[0];  
-         
-    });
+    this.btnVerTotal = !this.btnVerTotal;
+    if (this.btnVerTotal) {
+      this.cajageneralService.getSumRegistros().subscribe(response=>{
+        this.registroGeneral = response[0];  
+        this.textbtnc = 'Ocultar Total General'
+        this.iconoc = 'visibility_off';
+      });    
+    } else {
+      this.textbtnc = 'Ver Total General';
+      this.iconoc = 'visibility';
+
+    }
+  
   }
 
   onChangeDateStart(event: MatDatepickerInputEvent<Date>) {
@@ -128,14 +151,28 @@ export class CajageneralComponent implements OnInit {
   }
 
   onChangeDateEnd(event: MatDatepickerInputEvent<Date>) {
+    let currentYear = this.pipe.transform(new Date(event.value), 'yyyy');
+    let currentMonth = this.pipe.transform(new Date(event.value), 'MM');
     this.fechaHasta = this.pipe.transform(new Date(event.value), 'dd/MM/yyyy');
     this.conceptoService.getConceptosCaja().subscribe(conceptos => { this.findConceptos = conceptos; });
+    this.anio = currentYear;
+    this.mes = currentMonth;   
     if(this.fechaHasta){
       this.saveDisabled = false;
     }else{
       this.saveDisabled = true;
     }   
   }
+
+  getCajaMensualByPeriodo(){
+    let periodo = this.mes + '/' + this.anio;
+    this.cajamensualService.getCajaMensualByPeriodo(periodo).subscribe(
+      response =>{
+           this.cajaMensualSelect = response[0];
+           this.tienecaja = response[0].id > 0?true:false;
+      });
+  }
+
 
   onChangeDateCaja(event: MatDatepickerInputEvent<Date>) {
     this.newRegistroCaja.fecha = this.pipe.transform(new Date(event.value), 'dd/MM/yyyy');
@@ -167,7 +204,7 @@ export class CajageneralComponent implements OnInit {
   }
 
   saveRegistroCaja() {
-    this.ngxService.start();
+    this.ngxService.start();   
     this.newRegistroCaja.created_by_id = this.tokenService.currentUserData.id;
     this.newRegistroCaja.created_at = this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss');
     this.newRegistroCaja.fecha = this.newRegistroCaja.fecha?this.newRegistroCaja.fecha:this.pipe.transform(new Date(), 'yyyy-MM-dd');  
@@ -175,9 +212,9 @@ export class CajageneralComponent implements OnInit {
     this.cajageneralService.createCajaGeneral(this.newRegistroCaja).subscribe(
       registroscaja => {
         this.viewFormulario = false;
-        this.newRegistroCaja = new CajaGeneral();
-        this.getUltCaja();
-        this.getTotalRegistro();
+        this.newRegistroCaja = new CajaGeneral();      
+       // this.getUltCaja();
+       // this.getTotalRegistro();
         setTimeout(() => { 
           Swal.fire(
             'Registro guardado con éxito!',
@@ -240,9 +277,11 @@ export class CajageneralComponent implements OnInit {
 
   getRegistrosCaja() {
     this.registrosCaja = [];
+    this.tienecaja = false;   
     this.ngxService.start();    
     this.cajageneralService.getRegistrosCajaByFechas(this.fechaDesde, this.fechaHasta, this.findConcepto_id, this.findSubconcepto_id,this.findFormapago_id).subscribe(
       (registroscaja: CajaGeneral[]) => {
+        this.getCajaMensualByPeriodo();
         this.btnExcel = false;
         this.showMyClass = true;
         let singreso = 0; let segreso = 0;
@@ -257,7 +296,7 @@ export class CajageneralComponent implements OnInit {
         setTimeout(() => {
         this.totalFindIngreso = singreso;
         this.totalFindEgreso = segreso;
-        this.totalFindNeto = this.totalFindIngreso - this.totalFindEgreso;
+        this.totalFindNeto = Number(this.totalFindIngreso) - Number(this.totalFindEgreso);
         this.dataSource = new MatTableDataSource(this.registrosCaja);
         this.dataSource.paginator = this.paginator;
         this.ngxService.stop();
@@ -337,6 +376,47 @@ export class CajageneralComponent implements OnInit {
       win!.print();
       win!.close();
     }, 500);
+  }
+
+  DialogCierreMensual(){
+    Swal.fire({
+      title: 'Esta seguro de cerrar caja periodo ' +this.mes + '/' + this.anio+ '?',
+      text: "Una vez cerrada la caja, no se podran hacer modificaciones sobre registros del mes seleccionado.",
+      icon: 'warning',     
+      showCancelButton: true,
+      confirmButtonColor: '#3A6DBC',
+      cancelButtonColor: '#879bad',
+      confirmButtonText: 'Si, Cerrar Caja!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let registroids: any = [];
+        this.cajamensualService.getLastCajaMensual().subscribe(
+          response =>{ 
+            this.registrosCaja.forEach(registro => {
+               registroids.push(registro.id);
+            }); 
+            setTimeout(() => {
+              this.ngxService.start();
+              this.cajageneralService.updateRegistrosCajaByMes(registroids,this.tokenService.currentUserData.id).subscribe(
+                registros =>{
+                    let cajaMensual = new CajaMensual();
+                    cajaMensual.created_by_id = this.tokenService.currentUserData.id;
+                    cajaMensual.periodo = this.mes + '/' + this.anio;
+                    cajaMensual.saldoinicial = response.saldocierre?response.saldocierre:0;
+                    cajaMensual.ingreso = this.totalFindIngreso;
+                    cajaMensual.egreso = this.totalFindEgreso;
+                    cajaMensual.saldocierre = Number(this.totalFindNeto.toFixed(2));
+                    this.cajamensualService.createCajaMensual(cajaMensual).subscribe(respcajamensual=>{
+                      this.ngxService.stop();
+                    });
+                    
+                })
+            }, 2000);             
+             
+          });
+         
+      }    
+    });   
   }
 
 

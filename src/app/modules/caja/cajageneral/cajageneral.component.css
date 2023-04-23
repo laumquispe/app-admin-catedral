@@ -4,6 +4,12 @@
     color: white;
   
   }
+.rowcaja{
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
 
 .rowDate{
     display: flex;
