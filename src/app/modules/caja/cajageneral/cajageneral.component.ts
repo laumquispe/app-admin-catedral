@@ -168,8 +168,11 @@ export class CajageneralComponent implements OnInit {
     let periodo = this.mes + '/' + this.anio;
     this.cajamensualService.getCajaMensualByPeriodo(periodo).subscribe(
       response =>{
-           this.cajaMensualSelect = response[0];
-           this.tienecaja = response[0].id > 0?true:false;
+           if(response.length > 0){
+             this.cajaMensualSelect = response[0];
+             this.tienecaja = response[0].id > 0?true:false;
+           }
+          
       });
   }
 
@@ -390,23 +393,30 @@ export class CajageneralComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         let registroids: any = [];
+        this.ngxService.start();
         this.cajamensualService.getLastCajaMensual().subscribe(
           response =>{ 
+            let lastCmensual = new CajaMensual(); lastCmensual = response;
             this.registrosCaja.forEach(registro => {
                registroids.push(registro.id);
             }); 
-            setTimeout(() => {
-              this.ngxService.start();
+            setTimeout(() => {             
               this.cajageneralService.updateRegistrosCajaByMes(registroids,this.tokenService.currentUserData.id).subscribe(
                 registros =>{
                     let cajaMensual = new CajaMensual();
                     cajaMensual.created_by_id = this.tokenService.currentUserData.id;
                     cajaMensual.periodo = this.mes + '/' + this.anio;
-                    cajaMensual.saldoinicial = response.saldocierre?response.saldocierre:0;
+                    cajaMensual.saldoinicial = lastCmensual?.saldocierre?lastCmensual.saldocierre:0;
                     cajaMensual.ingreso = this.totalFindIngreso;
                     cajaMensual.egreso = this.totalFindEgreso;
                     cajaMensual.saldocierre = Number(this.totalFindNeto.toFixed(2));
                     this.cajamensualService.createCajaMensual(cajaMensual).subscribe(respcajamensual=>{
+                      Swal.fire(
+                        'Datos guardados con éxito!',
+                        '',
+                        'success'                
+                      );
+                      this.getRegistrosCaja();
                       this.ngxService.stop();
                     });
                     

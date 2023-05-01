@@ -65,3 +65,14 @@ input.example-right-align {
 .mat-form-field-appearance-fill .mat-form-field-flex {
   background-color: #cbdcf8!important;
 }
+
+
+#logincontent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#logincontent > div {
+  width: 50%;
+}
