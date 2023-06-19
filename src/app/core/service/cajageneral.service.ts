@@ -66,5 +66,17 @@ export class CajageneralService {
     return this.http.put<CajaGeneral>(url, { registroids: registroids, usuario_id:usuario_id});  
   }
 
+  getLastReciboInterno(comprobante_id: number): Observable<CajaGeneral> {
+    const url = `${environment.baseUrl}/getlastrecibointerno?comprobante_id=${comprobante_id}`;
+    return this.http.get<CajaGeneral>(url);
+  }
+
+
+  getRegistrosAgrupados(anio: string): Observable<any[]> {
+    let params = new HttpParams();
+    params = params.set('anio', anio?anio.toString():'');     
+    const url = `${environment.baseUrl}/agrupadosbysubconcepto`;
+    return this.http.get<any>(url, {params});
+  }
 
 }

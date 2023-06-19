@@ -82,6 +82,7 @@ export class CajageneralComponent implements OnInit {
   dataSource: any;
   tienecaja = false;
   btnVerTotal = false;
+  numerocomprobante: number = 0;
   displayedColumnsCaja: string[] = ['numregistro','fecha', 'concepto', 'subconcepto', 'formapago', 'importe', 'acciones'];
   displayedColumns: string[] = ['numregistro','fecha','tiporegistro', 'concepto', 'subconcepto', 'descripcion', 'formapago', 'ingreso','egreso'];
   @ViewChild('buttoncaja', { static: false }) buttoncaja!: ButtonPrintComponent;
@@ -211,7 +212,7 @@ export class CajageneralComponent implements OnInit {
     this.newRegistroCaja.created_by_id = this.tokenService.currentUserData.id;
     this.newRegistroCaja.created_at = this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss');
     this.newRegistroCaja.fecha = this.newRegistroCaja.fecha?this.newRegistroCaja.fecha:this.pipe.transform(new Date(), 'yyyy-MM-dd');  
-    this.newRegistroCaja.saldo = this.newRegistroCaja.tiporegistro_id == TipoRegistro.INGRESO?Number(this.newRegistroCaja.importe)+Number(this.saldo):Number(this.saldo)-Number(this.newRegistroCaja.importe);
+    this.newRegistroCaja.saldo = this.newRegistroCaja.tiporegistro_id == TipoRegistro.INGRESO?Number(this.newRegistroCaja.importe)+Number(this.saldo):Number(this.saldo)-Number(this.newRegistroCaja.importe);   
     this.cajageneralService.createCajaGeneral(this.newRegistroCaja).subscribe(
       registroscaja => {
         this.viewFormulario = false;
@@ -428,6 +429,33 @@ export class CajageneralComponent implements OnInit {
       }    
     });   
   }
+
+  changeComprobante(comprobante_id: number){
+     if(comprobante_id == TipoComprobante.RECIBO_INTERNO){
+       this.cajageneralService.getLastReciboInterno(comprobante_id).subscribe(
+        response=>{this.numerocomprobante = Number(response?.nrocomprobante?response.nrocomprobante:0) + 1;
+                   this.newRegistroCaja.nrocomprobante = this.NumConCeros(this.numerocomprobante); 
+        });
+     }else{
+      this.newRegistroCaja.nrocomprobante = null;
+     }
+  }
+
+
+  NumConCeros(numeroOrig: number){
+    let res = "";
+    if(numeroOrig>=10000){
+     res = ""+numeroOrig.toString();}
+    if(numeroOrig>=1000){
+    res = "0"+numeroOrig.toString();}
+    if(numeroOrig>=100){
+    res = "00"+numeroOrig.toString();}
+    if(numeroOrig>=10){
+    res = "000"+numeroOrig.toString();}
+    if(numeroOrig>=1 || numeroOrig == 0){
+    res = "0000"+numeroOrig.toString();}
+    return res;
+ }
 
 
 }

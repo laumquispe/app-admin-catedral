@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule, MAT_DATE_LOCALE} from '@angular/material/core';
+import { MatTreeModule } from '@angular/material/tree';
 
 const myModule = [
   MatCardModule,
@@ -32,7 +33,9 @@ const myModule = [
   MatRadioModule,
   MatDatepickerModule,
   MatNativeDateModule,
-  MatSortModule
+  MatSortModule,
+  MatTreeModule,
+
   
 ];
 

@@ -30,7 +30,12 @@ export class CajamensualService {
     return this.http.get<any>(url, {params});
   }
 
-
+  getCajaMensualByAnio(anio:string): Observable<CajaMensual[]> {
+    let params = new HttpParams();
+    params = params.set('anio', anio);     
+    const url = `${environment.baseUrl}/getcajamensualbyanio`;
+    return this.http.get<any>(url, {params});
+  }
   
 
 

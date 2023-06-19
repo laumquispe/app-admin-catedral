@@ -20,7 +20,7 @@ export class CajaGeneral {
     subconcepto_id!: number;
     tipocomprobante!: TipoComprobante;
     tipocomprobante_id!: number;
-    nrocomprobante!: string;
+    nrocomprobante!: string | null;
     nroordenpago!: string;
     proveedor!: Proveedor;
     formapago!: FormaPago;
@@ -38,5 +38,7 @@ export class CajaGeneral {
     canceled_by_id?:number; 
     saldo! :number;  
     registrocerrado!: boolean; 
+
+    suma! :number; 
   }
   

@@ -65,7 +65,8 @@
               <div class="form-group tipocomprobante">
                   <mat-form-field>
                       <mat-label for="tipocomprobante_id">Tipo Comprobante</mat-label>
-                      <mat-select name="tipocomprobante_id" [(ngModel)]="newRegistroCaja.tipocomprobante_id">
+                      <mat-select name="tipocomprobante_id" [(ngModel)]="newRegistroCaja.tipocomprobante_id"
+                      (ngModelChange)="changeComprobante($event)">
                           <mat-option></mat-option>
                           <mat-option *ngFor="let tc of tipoComprobantes;" [value]="tc.id">
                               {{tc.descripcion}}

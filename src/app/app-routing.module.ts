@@ -18,6 +18,10 @@ const routes: Routes = [
     path: 'configuracion',
     loadChildren: () => import('@module/configuracion/configuracion.module').then(m => m.ConfiguracionModule)
   },
+  {
+    path: 'estadistica',
+    loadChildren: () => import('@module/estadistica/estadistica.module').then(m => m.EstadisticaModule)
+  }
 ];
 
 @NgModule({
