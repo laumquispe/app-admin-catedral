@@ -361,9 +361,9 @@ export class CajageneralComponent implements OnInit {
         fechahasta: this.fechaHasta,
         usuario: usuario,
         registros: this.registrosCaja,
-        ingreso: this.formatNumber(this.totalFindIngreso),
-        egreso: this.formatNumber(this.totalFindEgreso),
-        neto: this.formatNumber(this.registroGeneral.neto),        
+        ingreso: this.formatNumber(this.totalFindIngreso.toFixed(2)),
+        egreso: this.formatNumber(this.totalFindEgreso.toFixed(2)),
+        neto:  this.totalFindNeto.toFixed(2)       
       };
       this.buttoncaja.template = response;
       this.buttoncaja.generateHtml();
