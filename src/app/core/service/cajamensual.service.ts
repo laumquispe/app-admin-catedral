@@ -36,6 +36,13 @@ export class CajamensualService {
     const url = `${environment.baseUrl}/getcajamensualbyanio`;
     return this.http.get<any>(url, {params});
   }
+
+  getCajaMensualByFecha(fecha:string): Observable<CajaMensual[]> {
+    let params = new HttpParams();
+    params = params.set('fecha', fecha);     
+    const url = `${environment.baseUrl}/getregistroscajabyrangomes`;
+    return this.http.get<any>(url, {params});
+  }
   
 
 

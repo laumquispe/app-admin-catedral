@@ -87,7 +87,7 @@ export class ReportesComponent implements OnInit {
     this.ngxService.start();
     this.cajaMensuales =  this.cuentaIngreso =   this.cuentaEgreso = [];
     this.saldoInicial = this.totalIngreso = this.totalEgreso =  this.saldo  =   this.agrupadoIngreso =  this.agrupadoEgreso = 0;
-    if(this.anio == 2023){
+    if(this.anio == 2023){ //verificar
       this.cajamensualService.getCajaMensualByAnio(this.anio.toString()).subscribe(response=>{
         this.cajaMensuales = response;
         let sumingreso = 0; let sumegreso = 0; let saldo = 0;

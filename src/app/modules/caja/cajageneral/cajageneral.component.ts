@@ -91,6 +91,7 @@ export class CajageneralComponent implements OnInit {
   @ViewChild(MatSort) sort?: MatSort;
 
   cajaMensualSelect: CajaMensual = new CajaMensual();
+  respcajaMensual: any = null;
   constructor(
     private tokenService: AngularTokenService,
     private ngxService: NgxUiLoaderService,
@@ -217,17 +218,22 @@ export class CajageneralComponent implements OnInit {
       registroscaja => {
         this.viewFormulario = false;
         this.newRegistroCaja = new CajaGeneral();      
-       // this.getUltCaja();
+        this.getCajaMensual(registroscaja.fecha);
        // this.getTotalRegistro();
         setTimeout(() => { 
           Swal.fire(
             'Registro guardado con éxito!',
-            'Nº de Registro:'+registroscaja.id,
+            'Nº de Registro:'+registroscaja.id+'<br>PERIODO:'+this.pipe.transform(this.respcajaMensual.fecha, 'MM-yyyy')+'<br>INGRESO: $'+this.respcajaMensual.ingreso+'<br>EGRESO: $'+this.respcajaMensual.egreso+'<br><strong>SALDO: $'+this.respcajaMensual.neto+'</strong>',
             'success'                
           )
-          this.ngxService.stop(); });
+          this.ngxService.stop(); },1000);
       },
       error => { console.log(error); this.ngxService.stop(); });
+
+  }
+
+  getCajaMensual(fecha: any){    
+    this.cajamensualService.getCajaMensualByFecha(fecha).subscribe(arrayMensual=>{ this.respcajaMensual = arrayMensual[0]});
 
   }
 
