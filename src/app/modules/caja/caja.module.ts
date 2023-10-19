@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CajaRoutingModule } from './caja-routing.module';
 import { CajageneralComponent } from './cajageneral/cajageneral.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MaterialModule } from '@module/shared/material.module';
 import { SharedModule } from '@module/shared/shared.module';
@@ -21,8 +21,9 @@ import { MatTableExporterModule } from 'mat-table-exporter';
     FormsModule,
     NgbModule,
     MaterialModule,
-   MatTableExporterModule,
-    SharedModule  
+    MatTableExporterModule,
+    SharedModule,
+    ReactiveFormsModule   
   ]
 })
 export class CajaModule { }

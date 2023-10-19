@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CajaGeneral } from '@core/model/cajageneral';
@@ -29,15 +29,43 @@ import { ReporteService } from '@core/service/reporte.service';
 import * as _moment from 'moment';
 import { CajaMensual } from '@core/model/cajamensual';
 import { CajamensualService } from '@core/service/cajamensual.service';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { FormControl } from '@angular/forms';
+import { Moment } from 'moment';
+
+const moment = require('moment');
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-cajageneral',
   templateUrl: './cajageneral.component.html',
   styleUrls: ['./cajageneral.component.css'],
-  providers: [NumberFormatPipe]
+  providers: [NumberFormatPipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
+
+
 export class CajageneralComponent implements OnInit {
   anio?: string | null;
   mes?: string | null;
+  periodoSelect?: string | null;
   newRegistroCaja: CajaGeneral = new CajaGeneral();
   registrosCaja: CajaGeneral[] = [];
   conceptos: Concepto[] = [];
@@ -89,8 +117,11 @@ export class CajageneralComponent implements OnInit {
   template: Report = new Report(); model:any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
-
+  date = new FormControl(moment());
+  mesConsult!: number;
+  anioConsult!: number;
   cajaMensualSelect: CajaMensual = new CajaMensual();
+  periodoAnt: any[] = [];
   respcajaMensual: any = null;
   constructor(
     private tokenService: AngularTokenService,
@@ -114,6 +145,8 @@ export class CajageneralComponent implements OnInit {
     this.fechaDesde = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.fechaHasta = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.tokenService.validateToken().subscribe(response => {
+      this.anioConsult = moment().year();
+      this.mesConsult = moment().month() + 1;  
       this.proveedorService.getProveedores().subscribe(proveedores => { this.proveedores = proveedores; });
       this.formapagoService.getFormaPagos().subscribe(formapagos => { this.formaPagos = formapagos; });
       this.tipocomprobanteService.getTipoComprobantes().subscribe(tipocomprobantes => { this.tipoComprobantes = tipocomprobantes; });
@@ -131,6 +164,24 @@ export class CajageneralComponent implements OnInit {
   //   });
   // }
   
+  chosenYearHandler(normalizedYear: Moment) {
+    const ctrlValue = this.date.value;
+    this.anioConsult = normalizedYear.year();
+    ctrlValue.year(normalizedYear.year());
+    this.date.setValue(ctrlValue);   
+    this.saveDisabled = true;
+    
+  }
+
+  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value;
+    this.mesConsult = normalizedMonth.month() + 1;
+    ctrlValue.month(normalizedMonth.month());
+    this.date.setValue(ctrlValue);   
+    this.saveDisabled = false;
+    this.conceptoService.getConceptosCaja().subscribe(conceptos => { this.findConceptos = conceptos; });
+    datepicker.close();
+  }
 
   getTotalRegistro(){
     this.btnVerTotal = !this.btnVerTotal;
@@ -148,34 +199,56 @@ export class CajageneralComponent implements OnInit {
   
   }
 
-  onChangeDateStart(event: MatDatepickerInputEvent<Date>) {
-    this.fechaDesde = this.pipe.transform(new Date(event.value), 'dd/MM/yyyy');
-  }
+  // onChangeDateStart(event: MatDatepickerInputEvent<Date>) {
+  //   this.fechaDesde = this.pipe.transform(new Date(event.value), 'dd/MM/yyyy');
+  // }
 
-  onChangeDateEnd(event: MatDatepickerInputEvent<Date>) {
-    let currentYear = this.pipe.transform(new Date(event.value), 'yyyy');
-    let currentMonth = this.pipe.transform(new Date(event.value), 'MM');
-    this.fechaHasta = this.pipe.transform(new Date(event.value), 'dd/MM/yyyy');
-    this.conceptoService.getConceptosCaja().subscribe(conceptos => { this.findConceptos = conceptos; });
-    this.anio = currentYear;
-    this.mes = currentMonth;   
-    if(this.fechaHasta){
-      this.saveDisabled = false;
-    }else{
-      this.saveDisabled = true;
-    }   
-  }
+  // onChangeDateEnd(event: MatDatepickerInputEvent<Date>) {
+  //   let currentYear = this.pipe.transform(new Date(event.value), 'yyyy');
+  //   let currentMonth = this.pipe.transform(new Date(event.value), 'MM');
+  //   this.fechaHasta = this.pipe.transform(new Date(event.value), 'dd/MM/yyyy');
+  //   this.conceptoService.getConceptosCaja().subscribe(conceptos => { this.findConceptos = conceptos; });
+  //   this.anio = currentYear;
+  //   this.mes = currentMonth;   
+  //   if(this.fechaHasta){
+  //     this.saveDisabled = false;
+  //   }else{
+  //     this.saveDisabled = true;
+  //   }   
+  // }
 
-  getCajaMensualByPeriodo(){
-    let periodo = this.mes + '/' + this.anio;
+  getCajaMensualByPeriodo(){   
+    let mes = this.mesConsult < 10? '0'+this.mesConsult.toString():this.mesConsult.toString();
+    let anio = this.anioConsult.toString();
+    let periodo = mes + '/' + anio;
+    console.log('periodo', periodo); 
     this.cajamensualService.getCajaMensualByPeriodo(periodo).subscribe(
-      response =>{
+      response =>{          
            if(response.length > 0){
              this.cajaMensualSelect = response[0];
-             this.tienecaja = response[0].id > 0?true:false;
-           }
-          
-      });
+             this.tienecaja = response[0].id > 0?true:false;              
+           }                
+      });          
+      
+  }
+
+  getPeriodoAnterior(){
+      this.periodoAnt = [];   
+      let mesAnt = (this.mesConsult - 1) < 10? '0'+ (this.mesConsult - 1).toString():(this.mesConsult - 1).toString();
+      let anioAnt = this.anioConsult.toString();
+      let periodoAnt = mesAnt + '/' + anioAnt;
+      this.cajamensualService.getCajaMensualByPeriodoAnt(periodoAnt).subscribe(
+        cajaant =>{
+          if(cajaant.length > 0){
+             this.periodoAnt.push({periodo: cajaant[0]?.periodo,saldoinicio:cajaant[0]?.saldoinicial, ingreso:cajaant[0]?.ingreso, egreso:cajaant[0]?.egreso,saldocierre:cajaant[0]?.saldocierre });
+           }else{
+            this.cajageneralService.getRegistrosCajaByMes(periodoAnt).subscribe(
+              cajaant =>{this.periodoAnt.push({periodo: periodoAnt,saldoinicio:null, ingreso:cajaant[0].ingreso, egreso:cajaant[0].egreso,saldocierre:cajaant[0].neto });})          
+           }  
+        })          
+   
+    console.log('this.periodoAnt', this.periodoAnt);
+
   }
 
 
@@ -287,11 +360,12 @@ export class CajageneralComponent implements OnInit {
 
   getRegistrosCaja() {
     this.registrosCaja = [];
-    this.tienecaja = false;   
+    this.tienecaja = false;  
+    this.periodoSelect = this.mesConsult + '/' + this.anioConsult; 
     this.ngxService.start();    
-    this.cajageneralService.getRegistrosCajaByFechas(this.fechaDesde, this.fechaHasta, this.findConcepto_id, this.findSubconcepto_id,this.findFormapago_id).subscribe(
+    this.cajageneralService.getRegistrosCajaByFechas(this.periodoSelect, this.findConcepto_id, this.findSubconcepto_id,this.findFormapago_id).subscribe(
       (registroscaja: CajaGeneral[]) => {
-        this.getCajaMensualByPeriodo();
+        this.getCajaMensualByPeriodo();        
         this.btnExcel = false;
         this.showMyClass = true;
         let singreso = 0; let segreso = 0;
@@ -304,6 +378,7 @@ export class CajageneralComponent implements OnInit {
            }
         });
         setTimeout(() => {
+        this.getPeriodoAnterior(); 
         this.totalFindIngreso = singreso;
         this.totalFindEgreso = segreso;
         this.totalFindNeto = Number(this.totalFindIngreso) - Number(this.totalFindEgreso);
@@ -363,8 +438,8 @@ export class CajageneralComponent implements OnInit {
       const usuario = this.tokenService.currentUserData.apellido + ', ' + this.tokenService.currentUserData.nombre;
       this.model = {
         fechaHoy: this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss'),
-        fechadesde: this.fechaDesde,
-        fechahasta: this.fechaHasta,
+        periodoAnt: this.periodoAnt[0],
+        periodo: this.mesConsult < 10? '0'+this.periodoSelect:this.periodoSelect,       
         usuario: usuario,
         registros: this.registrosCaja,
         ingreso: this.formatNumber(this.totalFindIngreso.toFixed(2)),
@@ -390,7 +465,7 @@ export class CajageneralComponent implements OnInit {
 
   DialogCierreMensual(){
     Swal.fire({
-      title: 'Esta seguro de cerrar caja periodo ' +this.mes + '/' + this.anio+ '?',
+      title: 'Esta seguro de cerrar caja periodo ' +this.periodoSelect+ '?',
       text: "Una vez cerrada la caja, no se podran hacer modificaciones sobre registros del mes seleccionado.",
       icon: 'warning',     
       showCancelButton: true,
@@ -410,9 +485,12 @@ export class CajageneralComponent implements OnInit {
             setTimeout(() => {             
               this.cajageneralService.updateRegistrosCajaByMes(registroids,this.tokenService.currentUserData.id).subscribe(
                 registros =>{
+                    let mes = this.mesConsult < 10? '0'+this.mesConsult.toString():this.mesConsult.toString();
+                    let anio = this.anioConsult.toString();
+                    let periodo = mes + '/' + anio;
                     let cajaMensual = new CajaMensual();
                     cajaMensual.created_by_id = this.tokenService.currentUserData.id;
-                    cajaMensual.periodo = this.mes + '/' + this.anio;
+                    cajaMensual.periodo =  periodo;
                     cajaMensual.saldoinicial = lastCmensual?.saldocierre?lastCmensual.saldocierre:0;
                     cajaMensual.ingreso = this.totalFindIngreso;
                     cajaMensual.egreso = this.totalFindEgreso;

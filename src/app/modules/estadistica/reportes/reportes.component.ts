@@ -16,6 +16,10 @@ import { DatePipe } from '@angular/common';
 import { CajaMensual } from '@core/model/cajamensual';
 import { CajageneralService } from '@core/service/cajageneral.service';
 import { TipoRegistro } from '@core/model/tiporegistro';
+import { ConceptoService } from '@core/service/concepto.service';
+import { SubconceptoService } from '@core/service/subconcepto.service';
+import { Concepto } from '@core/model/concepto';
+import { Subconcepto } from '@core/model/subconcepto';
 
 const moment = require('moment');
 export const MY_FORMATS = {
@@ -29,6 +33,8 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'YYYY',
   },
 };
+
+
 @Component({
   selector: 'app-reportes',
   templateUrl: './reportes.component.html',
@@ -40,11 +46,33 @@ export const MY_FORMATS = {
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
 
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },]
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class ReportesComponent implements OnInit {
+  meses = [
+    { id: '0', name: 'Todos' },
+    { id: '1', name: 'Enero' },
+    { id: '2', name: 'Febrero' },
+    { id: '3', name: 'Marzo' },
+    { id: '4', name: 'Abril' },
+    { id: '5', name: 'Mayo' },
+    { id: '6', name: 'Junio' },
+    { id: '7', name: 'Julio' },
+    { id: '8', name: 'Agosto' },
+    { id: '9', name: 'Septiembre' },
+    { id: '10', name: 'Octubre' },
+    { id: '11', name: 'Noviembre' },
+    { id: '12', name: 'Diciembre' },
+  ];
 
+  tipoRegistros = [
+    { id: 1, name: 'INGRESO' },
+    { id: 2, name: 'EGRESO' }
+  ];
+  tipoRegistro_id!: number;
+  mesSelect_id!: string;
   date = new FormControl(moment());
+  date2 = new FormControl(moment());
   mes!: number;
   anio!: number;
   periodo!: string;
@@ -56,6 +84,10 @@ export class ReportesComponent implements OnInit {
   cuentaIngreso: any[] =[];  cuentaEgreso: any[] =[];
   saldoInicial: number = 0; totalIngreso : number = 0;totalEgreso : number = 0; saldo : number = 0; 
   agrupadoIngreso:number = 0;  agrupadoEgreso:number = 0;
+  conceptos: Concepto[] = [];
+  subConceptos: Subconcepto[] = [];
+  concepto_id!: number;
+  subconcepto_id!: number;
   constructor(
     private tokenService: AngularTokenService,
     private ngxService: NgxUiLoaderService,
@@ -63,6 +95,8 @@ export class ReportesComponent implements OnInit {
     private reporteService: ReporteService,
     private cajamensualService: CajamensualService,
     private cajageneralService: CajageneralService,
+    private conceptoService: ConceptoService,
+    private subconceptoService : SubconceptoService
   ) { }
 
   ngOnInit(): void {  
@@ -70,6 +104,14 @@ export class ReportesComponent implements OnInit {
       this.anio = moment().year();
       this.mes = moment().month() + 1;    
     });
+  }
+
+  changeTipoRegistro(tiporegistro_id: number) {
+    this.conceptoService.getConceptosByTipoRegistro(tiporegistro_id).subscribe(conceptos => { this.conceptos = conceptos; });
+  }
+
+  changeConceptos(concepto_id: number) {
+    this.subconceptoService.getSubconceptosByConcepto(concepto_id).subscribe(subconceptos => { this.subConceptos = subconceptos; });
   }
 
 
@@ -87,7 +129,7 @@ export class ReportesComponent implements OnInit {
     this.ngxService.start();
     this.cajaMensuales =  this.cuentaIngreso =   this.cuentaEgreso = [];
     this.saldoInicial = this.totalIngreso = this.totalEgreso =  this.saldo  =   this.agrupadoIngreso =  this.agrupadoEgreso = 0;
-    if(this.anio == 2023){ //verificar
+    if(this.anio){ //verificar
       this.cajamensualService.getCajaMensualByAnio(this.anio.toString()).subscribe(response=>{
         this.cajaMensuales = response;
         let sumingreso = 0; let sumegreso = 0; let saldo = 0;
@@ -171,11 +213,33 @@ export class ReportesComponent implements OnInit {
     }, 500);
   }
 
+  chosenYearTwoHandler(normalizedYear: Moment,datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value;
+    this.anio = normalizedYear.year();
+    ctrlValue.year(normalizedYear.year());
+    this.date2.setValue(ctrlValue);
+   // this.btnDisabled = false;
+    datepicker.close();
+    console.log('anio',  this.anio);
+  }
+
+
+  getTotalesByCuenta(){
+    this.ngxService.start();
+    if(this.mesSelect_id != '' && this.anio){
+       let periodo = this.mesSelect_id != '0'? this.mesSelect_id+'/'+ this.anio.toString():null;
+       this.cajageneralService.getRegistrosByPeriodo(periodo,this.tipoRegistro_id,this.concepto_id,this.subconcepto_id).subscribe(response=>{
+             console.log('response',response);
+       }); 
+    }
+  }
+
+
   // chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
   //   const ctrlValue = this.date.value;
   //   this.mes = normalizedMonth.month() + 1;
   //   ctrlValue.month(normalizedMonth.month());
-  //   this.date.setValue(ctrlValue);
+  //   this.date2.setValue(ctrlValue);
   //   datepicker.close();
   // }
 

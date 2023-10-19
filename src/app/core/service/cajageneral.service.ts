@@ -23,10 +23,9 @@ export class CajageneralService {
     return this.http.get<CajaGeneral[]>(url);
   }
 
-  getRegistrosCajaByFechas(fechadesde?: string | null,fechahasta?: string | null, concepto_id?:number,subconcepto_id?:number,formapago_id?:number): Observable<any> {  
+  getRegistrosCajaByFechas(periodo?: string | null, concepto_id?:number,subconcepto_id?:number,formapago_id?:number): Observable<any> {  
     let params = new HttpParams();
-    params = params.set('fechadesde', fechadesde?fechadesde:'');
-    params = params.set('fechahasta', fechahasta?fechahasta:''); 
+    params = params.set('periodo', periodo?periodo.toString():'null');
     params = params.set('concepto_id',  concepto_id?concepto_id.toString():'null');
     params = params.set('subconcepto_id', subconcepto_id?subconcepto_id.toString(): 'null');
     params = params.set('formapago_id', formapago_id?formapago_id.toString():'null');   
@@ -56,7 +55,7 @@ export class CajageneralService {
 
   getRegistrosCajaByMes(fechahasta?: string | null): Observable<any> {  
     let params = new HttpParams();
-    params = params.set('fechahasta', fechahasta?fechahasta:'');     
+    params = params.set('fecha', fechahasta?fechahasta:'');     
     const url = `${environment.baseUrl}/getregistroscajabyrangomes`;
     return this.http.get<any>(url, {params});
   }
@@ -76,6 +75,16 @@ export class CajageneralService {
     let params = new HttpParams();
     params = params.set('anio', anio?anio.toString():'');     
     const url = `${environment.baseUrl}/agrupadosbysubconcepto`;
+    return this.http.get<any>(url, {params});
+  }
+
+  getRegistrosByPeriodo(periodo?: string | null,tiporegistro_id?:number, concepto_id?:number,subconcepto_id?:number,): Observable<any> {  
+    let params = new HttpParams();
+    params = params.set('periodo', periodo?periodo.toString():'null');
+    params = params.set('tiporegistro_id',  tiporegistro_id?tiporegistro_id.toString():'null');
+    params = params.set('concepto_id',  concepto_id?concepto_id.toString():'null');
+    params = params.set('subconcepto_id', subconcepto_id?subconcepto_id.toString(): 'null');     
+    const url = `${environment.baseUrl}/getregistrosbyperiodo`;
     return this.http.get<any>(url, {params});
   }
 

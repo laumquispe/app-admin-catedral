@@ -25,8 +25,15 @@ export class CajamensualService {
 
   getCajaMensualByPeriodo(periodo:string): Observable<CajaMensual[]> {
     let params = new HttpParams();
-    params = params.set('periodo', periodo);     
+    params = params.set('periodo', periodo); 
     const url = `${environment.baseUrl}/getcajamensualbyperiodo`;
+    return this.http.get<any>(url, {params});
+  }
+
+  getCajaMensualByPeriodoAnt(periodo:string): Observable<any[]> {
+    let params = new HttpParams();
+    params = params.set('periodo', periodo); 
+    const url = `${environment.baseUrl}/getcajamensualbyperiodoant`;
     return this.http.get<any>(url, {params});
   }
 

@@ -1,14 +1,42 @@
-.rowDate{
+.rowDateone{
     display: flex;
-    justify-content: flex-start;
+    justify-content: start;
     align-items: center;
  }
 
- .rowDate .rangofechas{
+ .rowDateone .rangofechas{
     width: 150px!important; 
 }
 
- .rowInfo{
+.rowDate{
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+}
+
+.rowDate .meses{
+   width: 220px!important; 
+}
+
+
+.rowDate .rangofechas{
+   width: 150px!important; 
+}
+
+.rowDate .tiporegistro{
+   width: 200px!important;
+}
+
+
+.rowDate .conceptos{
+   width: 200px!important;
+}
+
+.rowDate .subconceptos{
+   width: 200px!important;
+}
+
+.rowInfo{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
