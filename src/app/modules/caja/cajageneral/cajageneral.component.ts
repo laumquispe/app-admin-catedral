@@ -449,14 +449,13 @@ export class CajageneralComponent implements OnInit {
       this.template = response;
       const usuario = this.tokenService.currentUserData.apellido + ', ' + this.tokenService.currentUserData.nombre;
       let saldoanterior = this.periodoAnt[0]?.saldocierre?this.periodoAnt[0]?.saldocierre:0;
-      let ingresoEncontrado = this.formatNumber(Number(saldoanterior)+Number(this.totalFindIngreso));
       this.model = {
         fechaHoy: this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         periodoAnt: this.periodoAnt[0],
         periodo: this.mesConsult < 10? '0'+this.periodoSelect:this.periodoSelect,       
         usuario: usuario,
         registros: this.registrosCaja,
-        ingreso: this.totalFindIngreso?ingresoEncontrado.toFixed(2):Number(this.cajaMensualSelect.ingreso)+Number(this.cajaMensualSelect.saldoinicial),
+        ingreso: this.totalFindIngreso?this.formatNumber(Number(saldoanterior)+Number(this.totalFindIngreso.toFixed(2))):Number(this.cajaMensualSelect.ingreso)+Number(this.cajaMensualSelect.saldoinicial),
         egreso: this.totalFindEgreso?this.formatNumber(this.totalFindEgreso.toFixed(2)):this.cajaMensualSelect.egreso,
         neto:  this.totalFindNeto?this.totalFindNeto.toFixed(2):this.cajaMensualSelect.saldocierre      
       };
