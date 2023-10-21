@@ -455,7 +455,7 @@ export class CajageneralComponent implements OnInit {
         periodo: this.mesConsult < 10? '0'+this.periodoSelect:this.periodoSelect,       
         usuario: usuario,
         registros: this.registrosCaja,
-        ingreso: this.totalFindIngreso?this.formatNumber(Number(saldoanterior)+Number(this.totalFindIngreso)):Number(this.cajaMensualSelect.ingreso)+Number(this.cajaMensualSelect.saldoinicial),
+        ingreso: this.totalFindIngreso?this.formatNumber(Number(saldoanterior)+Number(this.totalFindIngreso)).toFixed(2):Number(this.cajaMensualSelect.ingreso)+Number(this.cajaMensualSelect.saldoinicial),
         egreso: this.totalFindEgreso?this.formatNumber(this.totalFindEgreso.toFixed(2)):this.cajaMensualSelect.egreso,
         neto:  this.totalFindNeto?this.totalFindNeto.toFixed(2):this.cajaMensualSelect.saldocierre      
       };
