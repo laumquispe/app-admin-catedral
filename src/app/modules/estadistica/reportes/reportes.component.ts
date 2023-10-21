@@ -49,6 +49,31 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class ReportesComponent implements OnInit {
+
+  //view: any[];
+  width: number = 700;
+  height: number = 300;
+  fitContainer: boolean = false;
+
+  view: any[] = [600, 400];
+  // options for the chart
+  showXAxis = true;
+  showYAxis = true;
+  gradient = true;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Meses';
+  showYAxisLabel = true;
+  yAxisLabel = 'Importes';
+  legendTitle: string = 'Identificador';
+  timeline = true;
+  doughnut = true;
+  colorScheme: any = {domain: ['#9370DB', '#87CEFA', '#FA8072', '#FF7F50', '#90EE90', '#9370DB']};
+  //pie
+  showLabels = true;
+  // data goes here
+  result:any[] = [];
+
   meses = [
     { id: '0', name: 'Todos' },
     { id: '1', name: 'Enero' },
@@ -105,7 +130,9 @@ export class ReportesComponent implements OnInit {
       this.mes = moment().month() + 1;    
     });
   }
-
+  onSelect(event: any) {
+    console.log(event);
+  }
   changeTipoRegistro(tiporegistro_id: number) {
     this.conceptoService.getConceptosByTipoRegistro(tiporegistro_id).subscribe(conceptos => { this.conceptos = conceptos; });
   }
@@ -127,7 +154,7 @@ export class ReportesComponent implements OnInit {
 
   getTotalesByYear(){
     this.ngxService.start();
-    this.cajaMensuales =  this.cuentaIngreso =   this.cuentaEgreso = [];
+    this.cajaMensuales =  this.cuentaIngreso =   this.cuentaEgreso = []; this.result = [];
     this.saldoInicial = this.totalIngreso = this.totalEgreso =  this.saldo  =   this.agrupadoIngreso =  this.agrupadoEgreso = 0;
     if(this.anio){ //verificar
       this.cajamensualService.getCajaMensualByAnio(this.anio.toString()).subscribe(response=>{
@@ -136,6 +163,7 @@ export class ReportesComponent implements OnInit {
         this.cajaMensuales.forEach(element => {
            sumingreso += element.ingreso;
            sumegreso += element.egreso;
+           this.result.push({name: element.periodo,series: [{name: "Ingreso",value: element.ingreso},{name: "Egreso",value: element.egreso}]});
         });
         saldo = Number(sumingreso.toFixed(2)) - Number(sumegreso.toFixed(2));
         setTimeout(() => {

@@ -10,11 +10,15 @@ import { SharedModule } from '@module/shared/shared.module';
 import { EditregistrocajaComponent } from './editregistrocaja/editregistrocaja.component';
 import { DialogregistrocajaComponent } from './dialogregistrocaja/dialogregistrocaja.component';
 import { MatTableExporterModule } from 'mat-table-exporter';
+import { DateFormatDirective } from './directivesdate/DateFormatDirective';
+import { YearMonthFormatDirective } from './directivesdate/YearMonthFormatDirective';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 
 
 @NgModule({
-  declarations: [CajageneralComponent, EditregistrocajaComponent, DialogregistrocajaComponent],
+  declarations: [CajageneralComponent, EditregistrocajaComponent, DialogregistrocajaComponent, 
+    YearMonthFormatDirective],
   imports: [
     CommonModule,
     CajaRoutingModule,    
@@ -23,7 +27,8 @@ import { MatTableExporterModule } from 'mat-table-exporter';
     MaterialModule,
     MatTableExporterModule,
     SharedModule,
-    ReactiveFormsModule   
+    ReactiveFormsModule,
+    MatMomentDateModule   
   ]
 })
 export class CajaModule { }

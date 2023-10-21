@@ -16,6 +16,7 @@
     "importHelpers": true,
     "target": "es2015", //es2015
     "module": "esnext", //es2020
+    
     "paths": {
       "@core/*": [
         "src/app/core/*"
@@ -42,7 +43,7 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true,
+    "strictTemplates": true,    
    // "strictPropertyInitialization": false   
   }
 }

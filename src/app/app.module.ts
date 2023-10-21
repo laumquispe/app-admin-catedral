@@ -55,7 +55,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule, 
-    CoreModule,  
+    CoreModule,    
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),  
     NavbarModule,
     AngularTokenModule.forRoot({

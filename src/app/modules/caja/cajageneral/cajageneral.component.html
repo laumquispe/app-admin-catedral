@@ -17,10 +17,10 @@
   <mat-card *ngIf="viewFormulario" class="mat-elevation-z4 mt-3">
       <h3 style="color:#3a6dbc"><i class="fa fa-plus"></i> Nuevo Registro</h3>
       <form name="form" (ngSubmit)="f.form.valid && saveRegistroCaja()" #f="ngForm" novalidate>
-          <div class="rowuno">
-              <mat-form-field style="width:180px;">
+          <div class="rowuno"  [formGroup]="form">
+              <mat-form-field style="width:180px;" appDateFormat>
                   <mat-label>Fecha</mat-label>
-                  <input matInput [matDatepicker]="pickerF" (dateChange)="onChangeDateCaja($event)" [value]="today">
+                  <input matInput [matDatepicker]="pickerF"  (dateChange)="onChangeDateCaja($event)"  formControlName="today">
                   <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
                   <mat-datepicker #pickerF></mat-datepicker>
               </mat-form-field>
@@ -151,17 +151,17 @@
     <mat-card class="mat-elevation-z4 mt-3">
         <h3 style="color:#3a6dbc"><i class="fa fa-book"></i> Consultar Registros</h3>
         <div class="rowDate">
-            <div class="form-group rangofechas">
-                <mat-form-field>
-                    <input matInput [matDatepicker]="dp" placeholder="Periodo" [formControl]="date">
+            <div class="form-group rangofechas" [formGroup]="form">
+                <mat-form-field appYearMonthFormat>
+                    <mat-label>Month and Year</mat-label>
+                    <input matInput [matDatepicker]="dp" formControlName="date">
                     <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                    <mat-datepicker #dp
-                                    startView="multi-year"
-                                    (yearSelected)="chosenYearHandler($event)"
-                                    (monthSelected)="chosenMonthHandler($event, dp)"
-                                    panelClass="example-month-picker">
+                    <mat-datepicker #dp startView="multi-year" 
+                      (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, dp)">
                     </mat-datepicker>
                   </mat-form-field>
+                
             </div>
             <div class="form-group findfield">
                 <mat-form-field style="width: 150px;">
@@ -186,7 +186,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="form-group findfield">
+            <!-- <div class="form-group findfield">
                 <mat-form-field style="width: 150px;">
                     <mat-label for="useragenda_id">Forma Pago</mat-label>
                     <mat-select name="useragenda_id" [(ngModel)]="findFormapago_id">
@@ -196,7 +196,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
             <div class="form-group findfield">
                 <button mat-raised-button color="primary" type="button" [disabled]="saveDisabled"
                     (click)="getRegistrosCaja()">
@@ -233,8 +233,11 @@
                         <div  class="form-group">
                             Periodo Anterior: {{periodoAnt[0]?.periodo}} 
                         </div>
-                        <div  class="form-group">
+                        <div *ngIf="periodoAnt[0]?.saldocierre > 0" class="form-group">
                             Saldo Inicio: ${{periodoAnt[0]?.saldoinicio | number}} 
+                        </div>
+                        <div *ngIf="!!this.periodoSelect && periodoAnt[0]?.saldoinicio == null" class="form-group">
+                            <span style="color:#e40d3c">Sin Cierre Mensual</span>
                         </div>
                         <div  class="form-group">
                          Ingreso: ${{periodoAnt[0]?.ingreso | number}} 
@@ -242,7 +245,7 @@
                         <div  class="form-group">
                          Egreso: ${{periodoAnt[0]?.egreso | number}} 
                         </div>
-                        <div  class="form-group">
+                        <div  *ngIf="periodoAnt[0]?.saldocierre > 0"  class="form-group">
                             Saldo Cierre: ${{periodoAnt[0]?.saldocierre | number}} 
                         </div>
                      </div>   
@@ -282,6 +285,9 @@
                         </div>
                         <div  class="form-group">
                          Egreso: ${{totalFindEgreso | number}} 
+                        </div>
+                        <div *ngIf="totalFindNeto > 0" class="form-group">
+                            Saldo: ${{totalFindNeto | number}} 
                         </div>
                         <div  class="form-group">
                             <button mat-raised-button color="primary" type="button" [disabled]="btnExcel"

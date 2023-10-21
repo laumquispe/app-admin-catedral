@@ -31,34 +31,28 @@ import { CajaMensual } from '@core/model/cajamensual';
 import { CajamensualService } from '@core/service/cajamensual.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Moment } from 'moment';
+import * as moment from 'moment';
 
-const moment = require('moment');
+// const moment = require('moment');
 
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+// export const MY_FORMATS = {
+//   parse: {
+//     dateInput: 'MM/YYYY',
+//   },
+//   display: {
+//     dateInput: 'MM/YYYY',
+//     monthYearLabel: 'MMM YYYY',
+//     dateA11yLabel: 'LL',
+//     monthYearA11yLabel: 'MMMM YYYY',
+//   },
+// };
 @Component({
   selector: 'app-cajageneral',
   templateUrl: './cajageneral.component.html',
   styleUrls: ['./cajageneral.component.css'],
-  providers: [NumberFormatPipe,
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
-
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
+  providers: [NumberFormatPipe]
 })
 
 
@@ -117,13 +111,15 @@ export class CajageneralComponent implements OnInit {
   template: Report = new Report(); model:any;
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
-  date = new FormControl(moment());
+  //date = new FormControl(moment());
   mesConsult!: number;
   anioConsult!: number;
   cajaMensualSelect: CajaMensual = new CajaMensual();
   periodoAnt: any[] = [];
   respcajaMensual: any = null;
+
   constructor(
+    private fb: FormBuilder,
     private tokenService: AngularTokenService,
     private ngxService: NgxUiLoaderService,
     private cajageneralService: CajageneralService,
@@ -138,10 +134,15 @@ export class CajageneralComponent implements OnInit {
     private reporteService: ReporteService,
     private cajamensualService: CajamensualService
   ) { }
-
+  
+  form = this.fb.group({
+    today: [moment()],
+    date: [moment()],   
+  });
   ngOnInit() {
     this.ngxService.start();
-    this.today = new Date();  
+  
+    //this.today = new Date();  
     this.fechaDesde = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.fechaHasta = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.tokenService.validateToken().subscribe(response => {
@@ -163,21 +164,23 @@ export class CajageneralComponent implements OnInit {
   //     this.saldo = response.saldo; //nunca basarse en este dato.      
   //   });
   // }
+
+ 
   
   chosenYearHandler(normalizedYear: Moment) {
-    const ctrlValue = this.date.value;
+    const ctrlValue = this.form.controls.date.value;
     this.anioConsult = normalizedYear.year();
     ctrlValue.year(normalizedYear.year());
-    this.date.setValue(ctrlValue);   
+    this.form.controls.date.setValue(ctrlValue);   
     this.saveDisabled = true;
     
   }
 
   chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.date.value;
+    const ctrlValue = this.form.controls.date.value;
     this.mesConsult = normalizedMonth.month() + 1;
     ctrlValue.month(normalizedMonth.month());
-    this.date.setValue(ctrlValue);   
+    this.form.controls.date.setValue(ctrlValue);   
     this.saveDisabled = false;
     this.conceptoService.getConceptosCaja().subscribe(conceptos => { this.findConceptos = conceptos; });
     datepicker.close();
@@ -242,8 +245,12 @@ export class CajageneralComponent implements OnInit {
           if(cajaant.length > 0){
              this.periodoAnt.push({periodo: cajaant[0]?.periodo,saldoinicio:cajaant[0]?.saldoinicial, ingreso:cajaant[0]?.ingreso, egreso:cajaant[0]?.egreso,saldocierre:cajaant[0]?.saldocierre });
            }else{
-            this.cajageneralService.getRegistrosCajaByMes(periodoAnt).subscribe(
-              cajaant =>{this.periodoAnt.push({periodo: periodoAnt,saldoinicio:null, ingreso:cajaant[0].ingreso, egreso:cajaant[0].egreso,saldocierre:cajaant[0].neto });})          
+              if(this.mesConsult - 1 > 0){
+               this.cajageneralService.getRegistrosCajaByMes(periodoAnt).subscribe(
+                cajaant =>{                  
+                  this.periodoAnt.push({periodo: periodoAnt,saldoinicio:null, ingreso:cajaant[0].ingreso, egreso:cajaant[0].egreso,saldocierre:cajaant[0].neto });
+                })          
+              }  
            }  
         })          
    
@@ -293,12 +300,12 @@ export class CajageneralComponent implements OnInit {
         this.newRegistroCaja = new CajaGeneral();      
         this.getCajaMensual(registroscaja.fecha);
        // this.getTotalRegistro();
-        setTimeout(() => { 
+        setTimeout(() => { //+'<br>PERIODO:'+this.pipe.transform(this.respcajaMensual.fecha, 'MM-yyyy')+'<br>INGRESO: $'+this.respcajaMensual.ingreso+'<br>EGRESO: $'+this.respcajaMensual.egreso+'<br><strong>SALDO: $'+this.respcajaMensual.neto+'</strong>'
           Swal.fire(
             'Registro guardado con éxito!',
-            'Nº de Registro:'+registroscaja.id+'<br>PERIODO:'+this.pipe.transform(this.respcajaMensual.fecha, 'MM-yyyy')+'<br>INGRESO: $'+this.respcajaMensual.ingreso+'<br>EGRESO: $'+this.respcajaMensual.egreso+'<br><strong>SALDO: $'+this.respcajaMensual.neto+'</strong>',
+            'Nº de Registro:'+registroscaja.id,
             'success'                
-          )
+          ) 
           this.ngxService.stop(); },1000);
       },
       error => { console.log(error); this.ngxService.stop(); });
@@ -362,6 +369,7 @@ export class CajageneralComponent implements OnInit {
     this.registrosCaja = [];
     this.tienecaja = false;  
     this.periodoSelect = this.mesConsult + '/' + this.anioConsult; 
+    this.totalFindIngreso = this.totalFindEgreso = this.totalFindNeto = 0;
     this.ngxService.start();    
     this.cajageneralService.getRegistrosCajaByFechas(this.periodoSelect, this.findConcepto_id, this.findSubconcepto_id,this.findFormapago_id).subscribe(
       (registroscaja: CajaGeneral[]) => {
@@ -377,15 +385,19 @@ export class CajageneralComponent implements OnInit {
             segreso += caja.importe;
            }
         });
-        setTimeout(() => {
-        this.getPeriodoAnterior(); 
-        this.totalFindIngreso = singreso;
-        this.totalFindEgreso = segreso;
-        this.totalFindNeto = Number(this.totalFindIngreso) - Number(this.totalFindEgreso);
+       // setTimeout(() => {
+        this.getPeriodoAnterior();             
         this.dataSource = new MatTableDataSource(this.registrosCaja);
-        this.dataSource.paginator = this.paginator;
-        this.ngxService.stop();
-      },500);
+        this.dataSource.paginator = this.paginator;       
+       // });
+        setTimeout(()=>{
+          if(!this.tienecaja){
+            this.totalFindIngreso = singreso;
+            this.totalFindEgreso = segreso;
+            this.totalFindNeto = this.periodoAnt[0]?.saldocierre?(Number(this.periodoAnt[0].saldocierre)+Number(this.totalFindIngreso)) - Number(this.totalFindEgreso):0;            
+          } 
+          this.ngxService.stop();  
+        },500)
       },
       error => { console.log(error); this.ngxService.stop(); });   
   }
@@ -436,15 +448,16 @@ export class CajageneralComponent implements OnInit {
     this.reporteService.get(templateid).subscribe(response => {
       this.template = response;
       const usuario = this.tokenService.currentUserData.apellido + ', ' + this.tokenService.currentUserData.nombre;
+      let saldoanterior = this.periodoAnt[0]?.saldocierre?this.periodoAnt[0]?.saldocierre:0;
       this.model = {
         fechaHoy: this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss'),
         periodoAnt: this.periodoAnt[0],
         periodo: this.mesConsult < 10? '0'+this.periodoSelect:this.periodoSelect,       
         usuario: usuario,
         registros: this.registrosCaja,
-        ingreso: this.formatNumber(this.totalFindIngreso.toFixed(2)),
-        egreso: this.formatNumber(this.totalFindEgreso.toFixed(2)),
-        neto:  this.totalFindNeto.toFixed(2)       
+        ingreso: this.totalFindIngreso?this.formatNumber(Number(saldoanterior)+Number(this.totalFindIngreso)):Number(this.cajaMensualSelect.ingreso)+Number(this.cajaMensualSelect.saldoinicial),
+        egreso: this.totalFindEgreso?this.formatNumber(this.totalFindEgreso.toFixed(2)):this.cajaMensualSelect.egreso,
+        neto:  this.totalFindNeto?this.totalFindNeto.toFixed(2):this.cajaMensualSelect.saldocierre      
       };
       this.buttoncaja.template = response;
       this.buttoncaja.generateHtml();

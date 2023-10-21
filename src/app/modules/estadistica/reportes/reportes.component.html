@@ -51,7 +51,31 @@
             </div>
         </div>    
     </mat-card>
-    
+    <div *ngIf="result.length > 0" class="divchar mat-elevation-z4 mt-3">
+        <h3 style="color:#3a6dbc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="material-icons">leaderboard</span>Gráfico de Barra de Ingresos y Egresos año {{anio}}</h3> 
+        <div id="print-section" class="divchardos">      
+            <ngx-charts-bar-vertical-2d
+                        [view]="[600, 400]"
+                        [scheme]="colorScheme"
+                        [results]="result"
+                        [gradient]="gradient"
+                        [xAxis]="showXAxis"
+                        [yAxis]="showYAxis"
+                        [legend]="showLegend"
+                        [showXAxisLabel]="showXAxisLabel"
+                        [showYAxisLabel]="showYAxisLabel"
+                        [xAxisLabel]="xAxisLabel"
+                        [yAxisLabel]="yAxisLabel"
+                        [legendTitle]="legendTitle"
+                        (select)="onSelect($event)">
+            </ngx-charts-bar-vertical-2d>   
+       </div> 
+       <!-- <button  printSectionId="print-section" ngxPrint color-adjust="exact"  useExistingCss="true" printTitle="Gráfico de Barra de Ingresos y Egresos año {{anio}}">print</button>     -->
+    </div>
+  
+
+
+
     <!-- <mat-card class="mat-elevation-z4 mt-3">
         <h3 style="color:#3a6dbc"><span class="material-icons">query_stats</span> Consultar Reporte Por Cuenta</h3>
         <div class="rowDate">

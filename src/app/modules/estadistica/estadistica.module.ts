@@ -8,6 +8,11 @@ import { MaterialModule } from '@module/shared/material.module';
 import { SharedModule } from '@module/shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NumberFormatPipe } from '@core/library/number.pipe';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxPrintModule } from 'ngx-print';
+
+
+
 
 
 @NgModule({
@@ -18,10 +23,13 @@ import { NumberFormatPipe } from '@core/library/number.pipe';
     CommonModule,
     EstadisticaRoutingModule,
     FormsModule,
-    NgbModule,
+    NgbModule,   
     MaterialModule,
     SharedModule,
-    ReactiveFormsModule  
+    ReactiveFormsModule,
+    NgxChartsModule,
+    NgxPrintModule
+   
   ],
   providers: [ NumberFormatPipe]
 })
