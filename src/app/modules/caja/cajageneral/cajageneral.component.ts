@@ -116,8 +116,7 @@ export class CajageneralComponent implements OnInit {
   anioConsult!: number;
   cajaMensualSelect: CajaMensual = new CajaMensual();
   periodoAnt: any[] = [];
-  respcajaMensual: any = null;
-
+  respcajaMensual: any = null; 
   constructor(
     private fb: FormBuilder,
     private tokenService: AngularTokenService,
@@ -140,9 +139,7 @@ export class CajageneralComponent implements OnInit {
     date: [moment()],   
   });
   ngOnInit() {
-    this.ngxService.start();
-  
-    //this.today = new Date();  
+    this.ngxService.start();    
     this.fechaDesde = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.fechaHasta = this.pipe.transform(new Date(), 'dd/MM/yyyy');
     this.tokenService.validateToken().subscribe(response => {
@@ -289,14 +286,19 @@ export class CajageneralComponent implements OnInit {
   }
 
   saveRegistroCaja() {
-    this.ngxService.start();   
+    this.ngxService.start();      
     this.newRegistroCaja.created_by_id = this.tokenService.currentUserData.id;
     this.newRegistroCaja.created_at = this.pipe.transform(new Date(), 'dd-MM-yyyy HH:mm:ss');
-    this.newRegistroCaja.fecha = this.newRegistroCaja.fecha?this.newRegistroCaja.fecha:this.pipe.transform(new Date(), 'yyyy-MM-dd');  
+    this.newRegistroCaja.fecha = this.newRegistroCaja.fecha?this.newRegistroCaja.fecha:this.pipe.transform(new Date(this.form.get('today')?.value), 'yyyy-MM-dd');  
     this.newRegistroCaja.saldo = this.newRegistroCaja.tiporegistro_id == TipoRegistro.INGRESO?Number(this.newRegistroCaja.importe)+Number(this.saldo):Number(this.saldo)-Number(this.newRegistroCaja.importe);   
+    console.log('today moment',this.form.get('today')?.value);
+    console.log('today format',this.pipe.transform(new Date(this.form.get('today')?.value), 'yyyy-MM-dd'));
     this.cajageneralService.createCajaGeneral(this.newRegistroCaja).subscribe(
       registroscaja => {
+        this.saveDisabled = true;
         this.viewFormulario = false;
+        this.textbtn = 'Registrar Caja';
+        this.icono = 'fa fa-plus fa-lg';
         this.newRegistroCaja = new CajaGeneral();      
         this.getCajaMensual(registroscaja.fecha);
        // this.getTotalRegistro();
@@ -305,7 +307,7 @@ export class CajageneralComponent implements OnInit {
             'Registro guardado con éxito!',
             'Nº de Registro:'+registroscaja.id,
             'success'                
-          ) 
+          );      
           this.ngxService.stop(); },1000);
       },
       error => { console.log(error); this.ngxService.stop(); });

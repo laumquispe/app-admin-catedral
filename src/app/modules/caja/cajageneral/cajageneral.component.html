@@ -20,7 +20,7 @@
           <div class="rowuno"  [formGroup]="form">
               <mat-form-field style="width:180px;" appDateFormat>
                   <mat-label>Fecha</mat-label>
-                  <input matInput [matDatepicker]="pickerF"  (dateChange)="onChangeDateCaja($event)"  formControlName="today">
+                  <input matInput [matDatepicker]="pickerF"   (dateChange)="onChangeDateCaja($event)"  formControlName="today">
                   <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
                   <mat-datepicker #pickerF></mat-datepicker>
               </mat-form-field>
